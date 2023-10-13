@@ -1,0 +1,12 @@
+.vscode
+.tmp/
+.vs/
+.env.php
+.tmp/
+.vscode/
+node_modules/
+.node_modules/
+node_modules
+vendor/
+src/*
+!src/framework/
