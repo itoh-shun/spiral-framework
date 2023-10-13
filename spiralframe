@@ -9,7 +9,7 @@ use Command\Commands\DatabaseDelete;
 use Command\Commands\DatabaseSchemaCheck;
 use Command\Commands\Interactor\CreateProjectInteractor;
 
-require_once "Command/BootStrap/autoload.php";
+require_once "spiral-framework/Command/BootStrap/autoload.php";
 
 $commander = Commander::init();
 $commander->add(new ApplicationInitalize(new CreateProjectInteractor()));

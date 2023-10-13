@@ -157,13 +157,6 @@ class ApplicationDeploy extends Command
             exec("rm -rf .tmp/$environment.zip");
         }
 
-        $filelist = glob('src/*' . '*');
-        exec('composer dump-autoload');
-        foreach ($filelist as $file) {
-            if (file_exists("$file/makeAutoload.php")) {
-                exec("cd $file && php makeAutoload.php && cd -", $output, $retval);
-            }
-        }
         $isGit = 'yes';
         if (!$skip) {
             $isGit = $this->ask(
@@ -199,10 +192,20 @@ class ApplicationDeploy extends Command
             exec(
                 "git add -N .; git diff --name-only --relative=src/ $commitId | xargs -I % cp -r --parents ./src/% .tmp/$environment > /dev/null 2>&1"
             );
+            exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("mv .tmp/$environment/src/* .tmp/$environment");
             rmdir(".tmp/$environment/src");
         } else {
+            exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("cp -r src/* .tmp/$environment");
+        }
+
+        $filelist = glob('.tmp/dev/*' . '*');
+        exec('composer dump-autoload');
+        foreach ($filelist as $file) {
+            if (file_exists("$file/makeAutoload.php")) {
+                exec("cd $file && php makeAutoload.php && cd -", $output, $retval);
+            }
         }
 
         $filelist = glob(".tmp/$environment/*");

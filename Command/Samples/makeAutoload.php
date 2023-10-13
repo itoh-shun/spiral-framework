@@ -21,7 +21,7 @@ function topological_sort_visit($node, $graph, &$visited, &$result) {
     }
 }
 
-$classToFileMap  = require_once \'../../vendor/composer/autoload_classmap.php\';
+$classToFileMap  = require_once \'../../../vendor/composer/autoload_classmap.php\';
 $classToFileMap = array_filter($classToFileMap, function($path) {
     return strpos($path, getcwd()) !== false;
 });
