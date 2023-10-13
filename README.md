@@ -57,6 +57,18 @@ composer -V
 ~~~
 composer init
 ~~~
+
+## Composer.json 設定
+
+~~~
+{
+    "autoload": { //追加
+        "classmap": ["src", "spiral-framework/src"] //追加
+    },
+}
+
+~~~
+
 ## プロジェクトの始め方
 ~~~
 php spiral-framework/spiralframe app:init <プロジェクト名>

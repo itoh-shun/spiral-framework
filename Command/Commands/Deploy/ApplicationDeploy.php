@@ -189,9 +189,30 @@ class ApplicationDeploy extends Command
                     exit();
                 }
             }
+            
+            $filelist = glob("src/*");
+            exec('composer dump-autoload');
+            foreach ($filelist as $file) {
+                if (file_exists("$file/makeAutoload.php")) {
+                    exec("cd $file && php makeAutoload.php && cd -");
+                }
+                if (file_exists("$file/.git")) {
+                    $this->rmdir_recursively("$file/.git");
+                }
+            }
             exec(
                 "git add -N .; git diff --name-only --relative=src/ $commitId | xargs -I % cp -r --parents ./src/% .tmp/$environment > /dev/null 2>&1"
             );
+            
+            $filelist = glob("spiral-framework/src/*");
+            foreach ($filelist as $file) {
+                if (file_exists("$file/makeAutoload.php")) {
+                    exec("cd $file && php makeAutoload.php && cd -");
+                }
+                if (file_exists("$file/.git")) {
+                    $this->rmdir_recursively("$file/.git");
+                }
+            }
             exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("mv .tmp/$environment/src/* .tmp/$environment");
             rmdir(".tmp/$environment/src");
@@ -200,18 +221,9 @@ class ApplicationDeploy extends Command
             exec("cp -r src/* .tmp/$environment");
         }
 
-        $filelist = glob('.tmp/dev/*' . '*');
-        exec('composer dump-autoload');
-        foreach ($filelist as $file) {
-            if (file_exists("$file/makeAutoload.php")) {
-                exec("cd $file && php makeAutoload.php && cd -", $output, $retval);
-            }
-        }
-
         $filelist = glob(".tmp/$environment/*");
         foreach ($filelist as $file) {
             if (file_exists("$file/makeAutoload.php")) {
-                exec("cd $file && php makeAutoload.php && cd -");
                 unlink("$file/makeAutoload.php");
             }
             if (file_exists("$file/.git")) {
