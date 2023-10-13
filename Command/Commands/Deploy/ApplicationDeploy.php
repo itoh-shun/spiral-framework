@@ -211,6 +211,7 @@ class ApplicationDeploy extends Command
         $filelist = glob(".tmp/$environment/*");
         foreach ($filelist as $file) {
             if (file_exists("$file/makeAutoload.php")) {
+                exec("cd $file && php makeAutoload.php && cd -");
                 unlink("$file/makeAutoload.php");
             }
             if (file_exists("$file/.git")) {
