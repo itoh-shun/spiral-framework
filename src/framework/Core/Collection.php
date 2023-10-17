@@ -1,12 +1,8 @@
 <?php
+
 class Collection extends stdClass
 {
     public function __construct(array $ary = [])
-    {
-        $this->setVariable($ary);
-    }
-
-    private function setVariable(array $ary = [])
     {
         foreach ($ary as $key => $val) {
             if (is_array($val)) {
@@ -115,15 +111,11 @@ class Collection extends stdClass
         }
         return new Collection($tmp);
     }
-
     public function filter(callable $filter)
     {
         $tmp = [];
         foreach ($this->all() as $key => $val) {
-            $test = function (callable $filter, $val, $key): bool {
-                return $filter($val, $key);
-            };
-            if ($test($filter, $val, $key)) {
+            if ($filter($val, $key)) {
                 $tmp[$key] = $val;
             }
         }
@@ -134,10 +126,7 @@ class Collection extends stdClass
     {
         $tmp = [];
         foreach ($this->all() as $key => $val) {
-            $test = function (callable $filter, $val, $key): bool {
-                return $filter($val, $key);
-            };
-            if (!$test($filter, $val, $key)) {
+            if (!$filter($val, $key)) {
                 $tmp[$key] = $val;
             }
         }
@@ -146,31 +135,12 @@ class Collection extends stdClass
 
     public function first()
     {
-        $first = $this->array_key_first_org($this->all());
-        return $this->get($first);
-    }
-
-    private function array_key_first_org($array)
-    {
-        foreach ($array as $key => $unused) {
-            return $key;
-        }
-        return null;
+        return $this->get(array_key_first($this->all()));
     }
 
     public function last()
     {
-        $last = $this->array_key_last_org($this->all());
-        return $this->get($last);
-    }
-
-    private function array_key_last_org($array)
-    {
-        if (!is_array($array) || empty($array)) {
-            return null;
-        }
-
-        return array_keys($array)[count($array) - 1];
+        return $this->get(array_key_last($this->all()));
     }
 
     public function get($index)

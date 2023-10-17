@@ -584,7 +584,7 @@ class SpiralManager
         return (int) $res['count'];
     }
 
-    public function upsert($upsert)
+    public function upsert($uniqKey , $upsert)
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject('database', 'upsert');
 
@@ -593,11 +593,12 @@ class SpiralManager
             $data[] = ['name' => $key, 'value' => $v];
         }
 
+        $this->request->set('key', $uniqKey);
         $this->request->set('data', $data);
 
         $res = $this->connection->request($xSpiralApiHeader, $this->request);
 
-        return (int) $res['count'];
+        return (int) $res['status'];
     }
 
     public function delete()
