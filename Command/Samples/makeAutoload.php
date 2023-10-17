@@ -35,7 +35,7 @@ foreach ($regex as $file) {
     if (strpos($file[0], \'./resources\') === 0) {
         continue;
     }
-    if (strpos($file[0], \'./StartUp\') === 0) {
+    if (strpos($file[0], \'./routes\') === 0) {
         continue;
     }
     if($file[0] === \'./makeAutoload.php\'){        

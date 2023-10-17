@@ -27,7 +27,13 @@ class ApplicationInitalize extends Command {
 //      ApplicationInitalizeInputData();
         $this->line('Welcome Spiral Frame !!!!');
         $projectName = $this->ask("Please specify project name: ");
-        $inputData = new CreateProjectInteractorInputData(['projectName' => ucfirst(strtolower($projectName))]);
+        $inputData = new CreateProjectInteractorInputData(['projectName' => $projectName]);
         $this->inputPort->execute($inputData);
+
+  
+        if (!file_exists("composer.json")) {
+            exec("composer init");
+        }
+
     }
 }

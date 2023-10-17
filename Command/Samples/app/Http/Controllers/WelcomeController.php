@@ -1,7 +1,7 @@
 <?php
 echo '<?php
 
-namespace '.$projectName.'\InterfaceAdapters\Controllers\Web ;
+namespace '.$projectName.'\App\Http\Controllers\Web ;
 
 use framework\Http\Request;
 use framework\Http\Controller;
