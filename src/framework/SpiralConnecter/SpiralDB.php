@@ -57,15 +57,126 @@ namespace framework\SpiralConnecter {
 
     abstract class SpiralModel
     {
+        protected string $primaryKey = 'id'; 
+        protected array $fields = [];
+        protected string $title = '';
+        protected $manager = null;
 
-        public $title;
-
-        public $fields;
-        public function init()
+        public function __get($name)
         {
-            return (new SpiralManager(SpiralDB::getConnection()))
+            if (in_array($name, $this->fields)) {
+                return isset($this->$name) ? $this->$name : null;
+            }
+            throw new \Exception("Property {$name} does not exist.");
+        }
+    
+        public function __set($name, $value)
+        {
+            if (in_array($name, $this->fields)) {
+                $this->$name = $value;
+            } else {
+                throw new \Exception("Property {$name} cannot be set.");
+            }
+        }
+
+        protected function init()
+        {
+            $this->manager = (new SpiralManager(SpiralDB::getConnection()))
                 ->setTitle($this->title)
                 ->fields($this->fields);
+        }
+
+        protected function getManager()
+        {
+            if (!$this->manager) {
+                $this->init();
+            }
+            return $this->manager;
+        }
+         // 主キーによるレコードの取得
+        public static function find($id)
+        {
+            $instance = new static();
+            $data = $instance->getManager()->where($id, $id)->get();
+
+            if ($data->first()) {
+                // データベースから取得したデータを使用して新しいインスタンスを作成
+                $modelInstance = new static();
+
+                // 新しいインスタンスの各プロパティにデータを設定
+                foreach ($data->first() as $key => $value) {
+                    if (property_exists($modelInstance, $key)) {
+                        $modelInstance->$key = $value;
+                    }
+                }
+
+                return $modelInstance;
+            }
+
+            return null;  // データが見つからない場合はnullを返す
+        }
+
+        // すべてのレコードを取得
+        public static function all()
+        {
+            $instance = new static();
+            $data = $instance->getManager()->get();
+        
+            $models = [];
+        
+            if ($data) {
+                foreach ($data as $d) {
+                    // データベースから取得したデータを使用して新しいインスタンスを作成
+                    $modelInstance = new static();
+        
+                    // 新しいインスタンスの各プロパティにデータを設定
+                    foreach ($d as $key => $value) {
+                        if (property_exists($modelInstance, $key)) {
+                            $modelInstance->$key = $value;
+                        }
+                    }
+        
+                    $models[] = $modelInstance;
+                }
+            }
+        
+            return $models;
+        }
+
+        // レコードの保存 (新規作成または更新)
+        public function save()
+        {
+            // モデルのプロパティを連想配列として取得
+            $allProperties = get_object_vars($this);
+
+            $data = array_filter($allProperties, function($key) {
+                return in_array($key, $this->fields);
+            }, ARRAY_FILTER_USE_KEY);
+        
+            // 主キーの値を取得
+            $primaryKeyValue = $data[$this->primaryKey] ?? null;
+        
+            if ($primaryKeyValue) {
+                // 主キーの値が存在する場合、更新または挿入を行う
+                $this->getManager()->upsert($this->primaryKey, $data);
+            } else {
+                // 主キーの値が存在しない場合、新規挿入のみを行う
+                unset($data[$this->primaryKey]);
+                $id = $this->getManager()->create($data);
+                $this->id = (int)$id;
+            }
+        }
+
+        // レコードの削除
+        public function delete()
+        {
+            // モデルの主キーの値を取得
+            $primaryKeyValue = $this->{$this->primaryKey} ?? null;
+
+            if ($primaryKeyValue) {
+                // 主キーの値が存在する場合、該当するレコードを削除
+                $this->getManager()->where($this->primaryKey, $primaryKeyValue)->delete();
+            }
         }
     }
 }
