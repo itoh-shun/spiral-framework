@@ -6,73 +6,76 @@ use Closure;
 
 class Session
 {
-    public static function getId()
+    public static function getId(): string
     {
         return session_id();
     }
 
-    public static function generate()
+    public static function generate(): void
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
-    public static function regenerate()
+    public static function regenerate(): void
     {
         session_regenerate_id(true);
     }
 
-    public static function all()
+    public static function all(): array
     {
         return $_SESSION;
     }
 
-    public static function get(string $key, $any = null)
+    public static function get(string $key, $default = null)
     {
         if (isset($_SESSION[$key])) {
-            return Session::all()[$key];
+            return $_SESSION[$key];
         }
 
-        if ($any instanceof Closure) {
-            return $any();
+        if ($default instanceof Closure) {
+            return $default();
         }
 
-        return $any;
+        return $default;
     }
 
-    public static function put(string $key, $value)
+    public static function put(string $key, $value): void
     {
         $_SESSION[$key] = $value;
     }
 
-    public static function has(string $key)
+    public static function has(string $key): bool
     {
         return isset($_SESSION[$key]);
     }
 
-    public static function exists(string $key)
+    public static function exists(string $key): bool
     {
-        return array_key_exists($key, self::all());
+        return array_key_exists($key, $_SESSION);
     }
 
-    public static function missing(string $key)
+    public static function missing(string $key): bool
     {
-        return !isset($_SESSION[$key]);
+        return !self::exists($key);
     }
 
-    public static function forget($key)
+    public static function forget($key): void
     {
         if (is_string($key)) {
             unset($_SESSION[$key]);
+            return;
         }
 
         if (is_array($key)) {
             foreach ($key as $k) {
-                self::forget($k);
+                unset($_SESSION[$k]);
             }
         }
     }
 
-    public static function flush()
+    public static function flush(): void
     {
         session_destroy();
     }
