@@ -64,7 +64,7 @@ namespace framework\SpiralConnecter {
 
         public function __get($name)
         {
-            if (in_array($name, $this->fields)) {
+            if (in_array($name, $this->fields) || $name === 'id' ) {
                 return isset($this->$name) ? $this->$name : null;
             }
             throw new \Exception("Property {$name} does not exist.");
@@ -72,7 +72,7 @@ namespace framework\SpiralConnecter {
     
         public function __set($name, $value)
         {
-            if (in_array($name, $this->fields)) {
+            if (in_array($name, $this->fields) || $name === 'id') {
                 $this->$name = $value;
             } else {
                 throw new \Exception("Property {$name} cannot be set.");
@@ -94,10 +94,10 @@ namespace framework\SpiralConnecter {
             return $this->manager;
         }
          // 主キーによるレコードの取得
-        public static function find($id)
+        public static function find($value)
         {
             $instance = new static();
-            $data = $instance->getManager()->where($id, $id)->get();
+            $data = $instance->getManager()->where($instance->primaryKey, $value)->get();  // ここを修正
 
             if ($data->first()) {
                 // データベースから取得したデータを使用して新しいインスタンスを作成
