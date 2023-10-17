@@ -9,7 +9,7 @@ use framework\Enterprise\CommonModels\GateInterface;
 class Gate
 {
     private static $gates = [];
-    private static $auth;
+    private static $auth = auth();
 
     final public static function setAuth(Auth $auth)
     {
