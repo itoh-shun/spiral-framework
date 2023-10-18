@@ -9,7 +9,7 @@ use framework\Enterprise\CommonModels\GateInterface;
 class Gate
 {
     private static $gates = [];
-    private static $auth = auth();
+    private static $auth;
 
     final public static function setAuth(Auth $auth)
     {
@@ -45,7 +45,7 @@ class Gate
         foreach (self::$gates as $gate) {
             if ($gate->processable($pass)) {
                 if (self::$auth === null) {
-                    return $gate->process(...$instances);
+                    self::$auth = auth();
                 }
                 return $gate->process(self::$auth, ...$instances);
             }
