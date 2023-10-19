@@ -33,7 +33,7 @@ $regex = new RegexIterator($iterator, '/^.+\.php$/i', RecursiveRegexIterator::GE
 $dependencies = [];
 
 foreach ($regex as $file) {
-    if($file[0] === './resources/error.php') {
+    if (strpos($file[0], './resources') === 0) {
         continue;
     }
     if($file[0] === './makeAutoload.php') {

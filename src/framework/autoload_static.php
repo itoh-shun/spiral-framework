@@ -97,7 +97,6 @@ require_once 'framework/Http/Middleware/VerifyCsrfTokenMiddleware.php';
 require_once 'framework/Http/Response/ApiResponse.php';
 require_once 'framework/Exception/ExceptionHandler.php';
 require_once 'framework/Http/Kernel.php';
-require_once 'framework/resources/error.blade.php';
 require_once 'framework/Exception/DependencyResolveFailedException.php';
 require_once 'framework/Core/Config.php';
 require_once 'framework/Core/Func.php';
