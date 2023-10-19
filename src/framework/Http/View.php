@@ -113,7 +113,7 @@ class View
 
         ob_start(); //バッファ制御スタート
 
-        if ($isFullPath) {
+        if ($isFullPath || VIEW_FILE_ROOT == '') {
             require $this->file . '.php';
         } else {
             require VIEW_FILE_ROOT . '/' . $this->file . '.php';

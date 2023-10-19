@@ -8,8 +8,7 @@ class SpiralRedis
 
     public function __construct()
     {
-        global $SPIRAL;
-        $this->cache = $SPIRAL->getCache();
+        $this->cache = spiral()->getCache();
     }
 
     public function get($key)

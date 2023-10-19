@@ -8,6 +8,7 @@ use Command\Commands\ApplicationInitalize;
 use Command\Commands\DatabaseDelete;
 use Command\Commands\DatabaseSchemaCheck;
 use Command\Commands\Interactor\CreateProjectInteractor;
+use Command\Commands\LocalBuild;
 
 require_once "spiral-framework/Command/BootStrap/autoload.php";
 
@@ -16,6 +17,7 @@ $commander->add(new ApplicationInitalize(new CreateProjectInteractor()));
 $commander->add(new ApplicationDeploy());
 $commander->add(new DatabaseSchemaCheck());
 $commander->add(new DatabaseDelete());
+$commander->add(new LocalBuild());
 
 $kernel = new Kernel($commander);
 $commandArgv = new CommandArgv($argv);

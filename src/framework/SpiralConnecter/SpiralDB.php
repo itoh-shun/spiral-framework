@@ -50,8 +50,7 @@ namespace framework\SpiralConnecter {
         public static function getConnection()
         {
             if (class_exists('Spiral') && (self::$token == '' && self::$secret == '')) {
-                global $SPIRAL;
-                return new SpiralConnecter($SPIRAL);
+                return new SpiralConnecter(spiral());
             }
 
             return new SpiralApiConnecter(self::$token, self::$secret);

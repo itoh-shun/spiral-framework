@@ -7,9 +7,8 @@ class Auth extends stdClass
     public function __construct($fields)
     {
         if (class_exists('Spiral')) {
-            global $SPIRAL;
             foreach ($fields as $f) {
-                $this->{$f} = $SPIRAL->getContextByFieldTitle($f);
+                $this->{$f} = spiral()->getContextByFieldTitle($f);
             }
         }
     }

@@ -14,9 +14,9 @@ class ExceptionHandler
         $code = $exception->getCode();
         $message = $exception->getMessage();
         $title = 'Error';
-        echo View::forge(
-            'framework/resources/error',
+        echo view(
+            'error',
             compact('code', 'message', 'title')
-        )->render(true);
+        )->render();
     }
 }

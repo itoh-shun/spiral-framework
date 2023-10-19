@@ -15,7 +15,7 @@ class ExceptionHandler extends BaseExceptionHandler {
         $code = $exception->getCode();
         $message = $exception->getMessage();
         $title = "Error";
-        echo View::forge("framework/resources/error",compact("code","message","title"))->render(true);
+        echo view("error",compact("code","message","title"))->render();
     }
 }
 ';
