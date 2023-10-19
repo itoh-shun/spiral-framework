@@ -2,7 +2,8 @@
 echo '
 <?php
 
-function topological_sort($graph) {
+function topological_sort($graph)
+{
     $result = [];
     $visited = [];
     foreach ($graph as $node => $edges) {
@@ -11,7 +12,8 @@ function topological_sort($graph) {
     return array_reverse($result);
 }
 
-function topological_sort_visit($node, $graph, &$visited, &$result): void {
+function topological_sort_visit($node, $graph, &$visited, &$result): void
+{
     if (!isset($visited[$node])) {
         $visited[$node] = true;
         foreach ($graph[$node] as $edge) {
@@ -66,7 +68,8 @@ foreach ($regex as $file) {
     }
 }
 
-function resolveDependencies($file, $dependencies, &$resolved, &$seen): void {
+function resolveDependencies($file, $dependencies, &$resolved, &$seen): void 
+{
     $seen[$file] = true;
     foreach ($dependencies[$file] as $dependency) {
         if (!isset($resolved[$dependency]) && isset($dependencies[$dependency])) {
