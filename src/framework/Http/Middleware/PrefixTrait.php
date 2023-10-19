@@ -12,7 +12,7 @@ namespace framework\Http\Middleware;
 
     final public static function prefix($prefix, callable $func){
         $before = self::$prefix;
-        self::$prefix = (self::$prefix == '')? $prefix : self::$prefix.'/'.$prefix;
+        self::$prefix = (self::$prefix == '') ? $prefix : self::$prefix.'/'.$prefix;
         $func();
         self::$prefix = $before;
     }

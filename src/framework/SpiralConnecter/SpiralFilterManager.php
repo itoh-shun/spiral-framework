@@ -120,7 +120,7 @@ class SpiralFilterManager
         return new Collection($response);
     }
 
-    public function delete()
+    public function delete(): void
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject('db_filter', 'delete');
         $this->connection->request($xSpiralApiHeader, $this->request);

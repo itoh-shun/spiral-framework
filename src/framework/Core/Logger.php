@@ -45,8 +45,7 @@ class Logger
     {
         $miTime = explode('.', microtime(true));
         $msec = str_pad(substr($miTime[1], 0, 3), 3, '0');
-        $time = date('Y-m-d H:i:s', $miTime[0]) . '.' . $msec;
-        return $time;
+        return date('Y-m-d H:i:s', $miTime[0]) . '.' . $msec;
     }
 }
 

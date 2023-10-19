@@ -104,14 +104,13 @@ class HttpRequest
 
                             if ($response === false) {
                                 throw new RuntimeException('リクエストエラー');
-                            } else {
-                                //$info = curl_getinfo($raised['handle']);
-                                //$url = parse_url($info['url']);
-                                //parse_str($url['query'], $query);
-                                //$res['queryParam'] = $query;
-                                //$res['result'] = $response;
-                                $responses[] = json_decode($response);
                             }
+                            //$info = curl_getinfo($raised['handle']);
+                            //$url = parse_url($info['url']);
+                            //parse_str($url['query'], $query);
+                            //$res['queryParam'] = $query;
+                            //$res['result'] = $response;
+                            $responses[] = json_decode($response);
                             curl_multi_remove_handle($mh, $raised['handle']);
                             curl_close($raised['handle']);
                         }
@@ -177,14 +176,13 @@ class HttpRequest
 
                             if ($response === false) {
                                 throw new RuntimeException('リクエストエラー');
-                            } else {
-                                $info = curl_getinfo($raised['handle']);
-                                $url = parse_url($info['url']);
-                                parse_str($url['query'], $query);
-                                $res['queryParam'] = $query;
-                                $res['result'] = $response;
-                                $responses[] = $res;
                             }
+                            $info = curl_getinfo($raised['handle']);
+                            $url = parse_url($info['url']);
+                            parse_str($url['query'], $query);
+                            $res['queryParam'] = $query;
+                            $res['result'] = $response;
+                            $responses[] = $res;
                             curl_multi_remove_handle($mh, $raised['handle']);
                             curl_close($raised['handle']);
                         }

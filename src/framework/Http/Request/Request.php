@@ -109,7 +109,7 @@ class Request
 
     public function get($key, $default = '')
     {
-        $value = isset($this->request[$key]) ? $this->request[$key] : $default;
+        $value = $this->request[$key] ?? $default;
         return self::requestUrldecode($value);
     }
 

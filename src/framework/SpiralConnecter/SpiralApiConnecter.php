@@ -44,7 +44,7 @@ class SpiralApiConnecter implements SpiralConnecterInterface
         $request = new HttpRequest();
 
         $request->setHeader([
-            "X-SPIRAL-API: $header",
+            "X-SPIRAL-API: {$header}",
             'Content-Type: application/json; charset=UTF-8',
         ]);
 
@@ -77,7 +77,7 @@ class SpiralApiConnecter implements SpiralConnecterInterface
         $request = new HttpRequest();
 
         $request->setHeader([
-            "X-SPIRAL-API: $header",
+            "X-SPIRAL-API: {$header}",
             'Content-Type: application/json; charset=UTF-8',
         ]);
 

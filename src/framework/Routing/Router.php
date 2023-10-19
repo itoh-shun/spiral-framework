@@ -48,7 +48,7 @@ class Router
     ): Route {
 
         if(!empty(self::$prefix)){
-            $pass = (ltrim($pass, '/') === '')? self::$prefix : self::$prefix.'/'.ltrim($pass, '/');
+            $pass = (ltrim($pass, '/') === '') ? self::$prefix : self::$prefix.'/'.ltrim($pass, '/');
         }
         $route = new Route($method, $pass, $handler);
 

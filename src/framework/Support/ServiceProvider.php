@@ -10,12 +10,14 @@ class ServiceProvider {
     private $instances = [];
 
     // サービスを登録します
-    public function register($name, $definition) {
+    public function register($name, $definition):void
+    {
         $this->definitions[$name] = $definition;
     }
 
     // サービスを取得します
-    public function get($name) {
+    public function get($name) : void
+    {
         // インスタンスが既に存在する場合はそれを返す
         if (isset($this->instances[$name])) {
             return $this->instances[$name];

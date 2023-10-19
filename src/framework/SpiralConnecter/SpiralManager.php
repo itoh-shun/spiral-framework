@@ -520,8 +520,7 @@ class SpiralManager
         $this->request->set('key_field_title',$keyField);
         $this->request->set('key_field_value',$value);
         $xSpiralApiHeader = new XSpiralApiHeaderObject('database', 'get_file');
-        $res = $this->connection->request($xSpiralApiHeader, $this->request);
-        return $res;
+        return $this->connection->request($xSpiralApiHeader, $this->request);
     }
 
     public function create(array $create)
@@ -601,7 +600,7 @@ class SpiralManager
         return (int) $res['status'];
     }
 
-    public function delete()
+    public function delete(): int
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject('database', 'delete');
         $res = $this->connection->request($xSpiralApiHeader, $this->request);
@@ -717,10 +716,10 @@ class SpiralManager
 
 class SearchCondition
 {
-    public string $field;
-    public string $value;
-    public string $operator;
-    public bool $isAnd;
+    private string $field;
+    private string $value;
+    private string $operator;
+    private bool $isAnd;
 
     public function __construct(
         string $field,

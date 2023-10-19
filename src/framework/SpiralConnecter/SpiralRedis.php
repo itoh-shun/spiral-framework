@@ -14,7 +14,7 @@ class SpiralRedis {
         return $this->cache->get($key);
     }
 
-    public function set($key, $value) {
+    public function set($key, $value): void {
         $this->cache->set($key, $value);
     }
 

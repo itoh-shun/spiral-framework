@@ -50,7 +50,7 @@ class SiValidator
         self::$labels = $labels;
 
         foreach ($values as $key => $value) {
-            $label = isset($labels[$key]) ? $labels[$key] : $key;
+            $label = $labels[$key] ?? $key;
             $result[$key] = self::validate($value, $label, $rules[$key]);
         }
 

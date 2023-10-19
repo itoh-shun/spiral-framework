@@ -11,7 +11,7 @@ function topological_sort($graph) {
     return array_reverse($result);
 }
 
-function topological_sort_visit($node, $graph, &$visited, &$result) {
+function topological_sort_visit($node, $graph, &$visited, &$result): void {
     if (!isset($visited[$node])) {
         $visited[$node] = true;
         foreach ($graph[$node] as $edge) {
@@ -21,7 +21,7 @@ function topological_sort_visit($node, $graph, &$visited, &$result) {
     }
 }
 
-$classToFileMap  = require_once \'../../vendor/composer/autoload_classmap.php\';
+$classToFileMap = require_once \'../../vendor/composer/autoload_classmap.php\';
 $classToFileMap = array_filter($classToFileMap, function($path) {
     return strpos($path, getcwd()) !== false;
 });
@@ -66,7 +66,7 @@ foreach ($regex as $file) {
     }
 }
 
-function resolveDependencies($file, $dependencies, &$resolved, &$seen) {
+function resolveDependencies($file, $dependencies, &$resolved, &$seen): void {
     $seen[$file] = true;
     foreach ($dependencies[$file] as $dependency) {
         if (!isset($resolved[$dependency]) && isset($dependencies[$dependency])) {

@@ -19,9 +19,11 @@ class MinRule implements RuleInterface
     {
         if (is_numeric($value)) {
             return $value >= $this->min;
-        } elseif (is_string($value)) {
+        } 
+        if (is_string($value)) {
             return mb_strlen($value) >= $this->min;
-        } elseif (is_array($value)) {
+        } 
+        if (is_array($value)) {
             return count($value) >= $this->min;
         }
         return false;

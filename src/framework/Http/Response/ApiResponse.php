@@ -29,7 +29,7 @@ class ApiResponse
 
     public function toJson(): string
     {
-        $response = json_encode(
+        return json_encode(
             [
                 'data' => $this->data,
                 'count' => $this->count,
@@ -39,7 +39,5 @@ class ApiResponse
             ],
             JSON_UNESCAPED_SLASHES
         );
-        
-        return $response;
     }
 }

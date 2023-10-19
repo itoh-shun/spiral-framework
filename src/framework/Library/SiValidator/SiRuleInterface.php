@@ -69,8 +69,7 @@ class SpiralDbUniqueRule implements SiRule
         if (is_callable($searchCallable)) {
             $instance = $searchCallable($instance);
         }
-        $self = new self($instance, $uniqueKey);
-        return $self;
+        return new self($instance, $uniqueKey);
     }
 
     public function processable($value)
@@ -118,8 +117,7 @@ class SpiralDbExistRule implements SiRule
         if (is_callable($searchCallable)) {
             $instance = $searchCallable($instance);
         }
-        $self = new self($instance, $searchKey);
-        return $self;
+        return new self($instance, $searchKey);
     }
 
     public function processable($value)

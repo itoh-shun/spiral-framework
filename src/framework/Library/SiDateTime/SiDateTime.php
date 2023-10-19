@@ -47,7 +47,7 @@ class SiDateTime extends DateTime
 
     public static function hasFormat($date, $format)
     {
-        return !!self::createFromFormat($format, $date);
+        return (bool) self::createFromFormat($format, $date);
     }
 
     public static function now($timezone = '')
@@ -458,7 +458,7 @@ class SiDateTime extends DateTime
         return $this->toDateTimeString();
     }
 
-    public function __set($name, $value)
+    public function __set($name, $value): void
     {
         switch ($name) {
             case 'year':

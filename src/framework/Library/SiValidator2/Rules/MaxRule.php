@@ -20,9 +20,11 @@ class MaxRule implements RuleInterface
     {
         if (is_numeric($value)) {
             return $value <= $this->max;
-        } elseif (is_string($value)) {
+        } 
+        if (is_string($value)) {
             return mb_strlen($value) <= $this->max;
-        } elseif (is_array($value)) {
+        }
+        if (is_array($value)) {
             return count($value) <= $this->max;
         }
         return false;

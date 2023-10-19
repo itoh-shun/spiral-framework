@@ -89,10 +89,9 @@ class SpiralWebManager
         
         $xSpiralApiHeader = new XSpiralApiHeaderObject('table', 'data');
 
-        $response = $this->connection->request(
+        return $this->connection->request(
             $xSpiralApiHeader,
             $this->request
         );
-        return $response;
     }
 }

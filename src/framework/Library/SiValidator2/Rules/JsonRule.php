@@ -12,7 +12,7 @@ class JsonRule implements RuleInterface
     public function validate($value, $allValues = []): bool
     {
         json_decode($value);
-        return (json_last_error() == JSON_ERROR_NONE);
+        return json_last_error() == JSON_ERROR_NONE;
     }
 
     public function message(): string

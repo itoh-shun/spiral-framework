@@ -11,7 +11,6 @@ class Auth extends stdClass
             foreach ($fields as $f) {
                 $this->{$f} = $SPIRAL->getContextByFieldTitle($f);
             }
-        } else {
         }
     }
 

@@ -16,7 +16,7 @@ class XSpiralApiHeaderObject
 
     public function __toString()
     {
-        return "$this->func/$this->method/$this->action";
+        return "{$this->func}/{$this->method}/{$this->action}";
     }
 
     public function func()

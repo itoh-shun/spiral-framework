@@ -102,8 +102,7 @@ class JoinDb
 
         if ($this->isHasOne()) {
             return $result->first();
-        } else {
-            return $result;
-        }
+        } 
+        return $result;
     }
 }

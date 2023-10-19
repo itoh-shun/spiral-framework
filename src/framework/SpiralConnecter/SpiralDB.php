@@ -6,20 +6,22 @@ namespace framework\SpiralConnecter {
     class SpiralDB
     {
         protected string $title = '';
+
         protected array $fields = [];
 
         private static string $token = '';
+
         private static string $secret = '';
 
         private static ?SpiralConnecterInterface $connecter = null;
 
-        public static function setConnecter(SpiralConnecterInterface $connecter)
+        public static function setConnecter(SpiralConnecterInterface $connecter): void
         {
             if(RateLimiter::getTotalRequestsInLastMinute())
             self::$connecter = $connecter;
         }
 
-        public static function setToken(string $token, string $secret)
+        public static function setToken(string $token, string $secret): void
         {
             self::$token = $token;
             self::$secret = $secret;
@@ -58,8 +60,11 @@ namespace framework\SpiralConnecter {
     abstract class SpiralModel
     {
         protected string $primaryKey = 'id'; 
+
         protected array $fields = [];
+        
         protected string $title = '';
+        
         protected $manager = null;
 
         abstract public function __construct();
@@ -67,12 +72,12 @@ namespace framework\SpiralConnecter {
         public function __get($name)
         {
             if (in_array($name, $this->fields) || $name === 'id' ) {
-                return isset($this->$name) ? $this->$name : null;
+                return $this->$name ?? null;
             }
             throw new \Exception("Property {$name} does not exist.");
         }
     
-        public function __set($name, $value)
+        public function __set($name, $value): void
         {
             if (in_array($name, $this->fields) || $name === 'id') {
                 $this->$name = $value;
@@ -165,12 +170,12 @@ namespace framework\SpiralConnecter {
                 // 主キーの値が存在しない場合、新規挿入のみを行う
                 unset($data[$this->primaryKey]);
                 $id = $this->getManager()->create($data);
-                $this->id = (int)$id;
+                $this->id = (int) $id;
             }
         }
 
         // レコードの削除
-        public function delete()
+        public function delete(): void
         {
             // モデルの主キーの値を取得
             $primaryKeyValue = $this->{$this->primaryKey} ?? null;

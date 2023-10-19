@@ -4,19 +4,21 @@ namespace framework\SpiralConnecter {
     class SpiralWeb
     {
         protected string $title = '';
+
         protected array $fields = [];
 
         private static string $token = '';
+        
         private static string $secret = '';
 
         private static ?SpiralConnecterInterface $connecter = null;
 
-        public static function setConnecter(SpiralConnecterInterface $connecter)
+        public static function setConnecter(SpiralConnecterInterface $connecter): void
         {
             self::$connecter = $connecter;
         }
 
-        public static function setToken(string $token, string $secret)
+        public static function setToken(string $token, string $secret): void
         {
             self::$token = $token;
             self::$secret = $secret;
