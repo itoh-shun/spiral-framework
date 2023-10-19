@@ -7,7 +7,7 @@ use framework\Exception\NotFoundException;
 use framework\Http\Middleware\MiddlewareTrait;
 use framework\Http\Request;
 use framework\Http\Response;
-use framework\Service\ServiceProvider;
+use framework\Support\ServiceProvider;
 
 /**
  * Class Route
@@ -72,7 +72,7 @@ class Route
         return true;
     }
 
-    final public function process(Request $request, $service)
+    final public function process(Request $request, $service, ServiceProvider $serviceProvider)
     {
         $vars = [];
 
@@ -109,7 +109,7 @@ class Route
 
         $action = $this->action;
         //__constract Method実行
-        $instance = new $handler($request);
+        $instance = new $handler($request , $serviceProvider);
 
         if ($service == null) {
             return $instance->$action($vars);

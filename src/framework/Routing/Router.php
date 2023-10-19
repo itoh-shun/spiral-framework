@@ -8,7 +8,7 @@ use framework\Exception\NotFoundException;
 use framework\Http\Middleware\MiddlewareRouterTrait;
 use framework\Http\Middleware\PrefixTrait;
 use framework\Http\Request;
-use framework\Service\ServiceProvider;
+use framework\Support\ServiceProvider;
 use Response;
 
 class Router
@@ -18,7 +18,7 @@ class Router
 
     public static array $routes = [];
 
-    
+    private ?ServiceProvider $serviceProvider;
 
     /**
      * Router constructor.
@@ -27,6 +27,11 @@ class Router
      */
     public function __construct()
     {
+        
+    }
+
+    public function setServiceProvider(ServiceProvider $serviceProvider){
+        $this->serviceProvider = $serviceProvider;
     }
 
     /**
@@ -72,7 +77,7 @@ class Router
         foreach (self::$routes as $route) {
             if ($route->processable($request, $isMethodCheck)) {
                 $route->middleware($this->middlewares);
-                $result = $route->process($request, $route->service);
+                $result = $route->process($request, $route->service , $this->serviceProvider);
 
                 if ($result === false) {
                     continue;

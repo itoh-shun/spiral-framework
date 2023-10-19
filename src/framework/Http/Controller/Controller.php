@@ -4,14 +4,17 @@ namespace framework\Http;
 
 use framework\Http\Middleware\MiddlewareInterface;
 use framework\Http\Request;
+use framework\Support\ServiceProvider;
 
 class Controller
 {
-    public Request $request;
+    protected Request $request;
+    protected ServiceProvider $serviceProvider;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request , ServiceProvider $serviceProvider)
     {
         $this->request = $request;
+        $this->serviceProvider = $serviceProvider;
     }
     // ログの出力
     public function logging($message, string $file_name = 'app.log')

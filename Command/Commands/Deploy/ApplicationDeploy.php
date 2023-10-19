@@ -164,6 +164,21 @@ class ApplicationDeploy extends Command
                 false
             );
         }
+        
+        exec('composer dump-autoload');
+        $filelist = glob("src/*");
+        foreach ($filelist as $file) {
+            if (file_exists("$file/makeAutoload.php")) {
+                exec("cd $file && php makeAutoload.php && cd -");
+            }
+        }
+        $filelist = glob("spiral-framework/src/*");
+        foreach ($filelist as $file) {
+            if (file_exists("$file/makeAutoload.php")) {
+                exec("cd $file && php makeAutoload.php && cd -");
+            }
+        }
+
         if ($isGit === 'yes') {
             $commitId = '';
             if (!$skip) {
@@ -190,32 +205,14 @@ class ApplicationDeploy extends Command
                 }
             }
             
-            $filelist = glob("src/*");
-            exec('composer dump-autoload');
-            foreach ($filelist as $file) {
-                if (file_exists("$file/makeAutoload.php")) {
-                    exec("cd $file && php makeAutoload.php && cd -");
-                }
-                if (file_exists("$file/.git")) {
-                    $this->rmdir_recursively("$file/.git");
-                }
-            }
             exec(
                 "git add -N .; git diff --name-only --relative=src/ $commitId | xargs -I % cp -r --parents ./src/% .tmp/$environment > /dev/null 2>&1"
             );
             
-            $filelist = glob("spiral-framework/src/*");
-            foreach ($filelist as $file) {
-                if (file_exists("$file/makeAutoload.php")) {
-                    exec("cd $file && php makeAutoload.php && cd -");
-                }
-                if (file_exists("$file/.git")) {
-                    $this->rmdir_recursively("$file/.git");
-                }
-            }
             exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("mv .tmp/$environment/src/* .tmp/$environment");
             rmdir(".tmp/$environment/src");
+
         } else {
             exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("cp -r src/* .tmp/$environment");
