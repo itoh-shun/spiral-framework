@@ -62,6 +62,8 @@ namespace framework\SpiralConnecter {
         protected string $title = '';
         protected $manager = null;
 
+        abstract public function __construct();
+
         public function __get($name)
         {
             if (in_array($name, $this->fields) || $name === 'id' ) {

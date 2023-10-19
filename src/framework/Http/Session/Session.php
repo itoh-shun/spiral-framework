@@ -18,7 +18,7 @@ class Session
         }
     }
 
-    public static function regenerate(): void
+    public static function regenerate()
     {
         session_regenerate_id(true);
     }
@@ -41,7 +41,7 @@ class Session
         return $default;
     }
 
-    public static function put(string $key, $value): void
+    public static function put(string $key, $value)
     {
         $_SESSION[$key] = $value;
     }
@@ -61,7 +61,7 @@ class Session
         return !self::exists($key);
     }
 
-    public static function forget($key): void
+    public static function forget($key)
     {
         if (is_string($key)) {
             unset($_SESSION[$key]);
@@ -75,7 +75,7 @@ class Session
         }
     }
 
-    public static function flush(): void
+    public static function flush()
     {
         session_destroy();
     }

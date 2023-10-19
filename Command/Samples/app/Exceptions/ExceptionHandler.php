@@ -1,7 +1,7 @@
 <?php
 echo '<?php
 
-namespace '.$projectName.'\Exceptions;
+namespace '.$projectName.'\App\Exceptions;
 
 use Exception;
 use framework\Exception\ExceptionHandler as BaseExceptionHandler;

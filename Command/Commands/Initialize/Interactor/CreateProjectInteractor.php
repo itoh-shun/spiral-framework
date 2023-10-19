@@ -26,6 +26,8 @@ class CreateProjectInteractor implements CreateProjectInteractorInputPortInterfa
 
 
 class CreateProjectInteractorInputData {
+    public string $projectName = '';
+
     public function __construct(array $inputData)
     {
         $this->projectName = $inputData['projectName'];
