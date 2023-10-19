@@ -6,12 +6,13 @@ namespace '.$projectName.'\App\Http\Controllers\\'.$type.' ;
 use framework\Http\Request;
 use framework\Http\Controller;
 use framework\Http\View;
+use framework\Support\ServiceProvider;
 
 class '.$model.'Controller extends Controller
 {
-    public function __construct(Request $request)
+    public function __construct(Request $request, ServiceProvider $serviceProvider)
     {
-        parent::__construct($request);
+        parent::__construct($request , $serviceProvider);
     }
 
     public function index(array $vars)
