@@ -9,9 +9,9 @@ use framework\Support\ServiceProvider;
 class Controller
 {
     protected Request $request;
-    protected ServiceProvider $serviceProvider;
+    protected ?ServiceProvider $serviceProvider;
 
-    public function __construct(Request $request , ServiceProvider $serviceProvider)
+    public function __construct(Request $request , ?ServiceProvider $serviceProvider)
     {
         $this->request = $request;
         $this->serviceProvider = $serviceProvider;

@@ -10,10 +10,6 @@ use framework\Support\ServiceProvider;
 
 class '.$model.'Controller extends Controller
 {
-    public function __construct(Request $request, ServiceProvider $serviceProvider)
-    {
-        parent::__construct($request , $serviceProvider);
-    }
 
     public function index(array $vars)
     {
