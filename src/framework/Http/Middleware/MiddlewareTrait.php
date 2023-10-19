@@ -4,6 +4,7 @@ namespace framework\Http\Middleware;
 
 use framework\Exception\ClassNotFoundException;
 use framework\Http\Request;
+use framework\Support\ServiceProvider;
 
 /**
  * Trait MiddlewareTrait
@@ -51,7 +52,7 @@ trait MiddlewareTrait
     /**
      * @param Request $request
      */
-    private function processMiddleware(Request $request, array $vars = []): bool
+    private function processMiddleware(Request $request, ServiceProvider $serviceProvider, array $vars = []): bool
     {
 
         foreach (
@@ -64,7 +65,7 @@ trait MiddlewareTrait
         }
 
         foreach ($this->middlewares as $middleware) {
-            $instance = new $middleware($request);
+            $instance = new $middleware($request, $serviceProvider);
             if (!$instance->process($vars)) {
                 return false;
             }

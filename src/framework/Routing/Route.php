@@ -85,7 +85,7 @@ class Route
             }
         }
 
-        if ($this->processMiddleware($request, $vars) === false) {
+        if ($this->processMiddleware($request , $serviceProvider , $vars) === false) {
             return false;
         }
 
