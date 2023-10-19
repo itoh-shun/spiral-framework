@@ -20,7 +20,7 @@ class MaxRule implements RuleInterface
     {
         if (is_numeric($value)) {
             return $value <= $this->max;
-        } 
+        }
         if (is_string($value)) {
             return mb_strlen($value) <= $this->max;
         }

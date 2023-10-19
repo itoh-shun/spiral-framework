@@ -11,8 +11,9 @@ function view(string $template, array $param = [], bool $filter = false): View
     return new BladeLikeView($template, $param, $filter);
 }
 
-function response($content = '', $statusCode = 200, $message = '', $requestPath = '') {
-    return new \framework\Http\Response($content , $statusCode , $message , $requestPath);
+function response($content = '', $statusCode = 200, $message = '', $requestPath = '')
+{
+    return new \framework\Http\Response($content, $statusCode, $message, $requestPath);
 }
 
 function html($string = '')
@@ -95,7 +96,7 @@ function spiral()
         return $SPIRAL;
     }
 
-    throw new Exception('SPIRAL変数が見つかりませんでした',500);
+    throw new Exception('SPIRAL変数が見つかりませんでした', 500);
 
     //return new Spiral();
 }

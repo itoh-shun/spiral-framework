@@ -17,8 +17,9 @@ namespace framework\SpiralConnecter {
 
         public static function setConnecter(SpiralConnecterInterface $connecter): void
         {
-            if(RateLimiter::getTotalRequestsInLastMinute())
-            self::$connecter = $connecter;
+            if(RateLimiter::getTotalRequestsInLastMinute()) {
+                self::$connecter = $connecter;
+            }
         }
 
         public static function setToken(string $token, string $secret): void
@@ -48,7 +49,7 @@ namespace framework\SpiralConnecter {
 
         public static function getConnection()
         {
-            if (class_exists('Spiral') && ( self::$token == '' && self::$secret == '')) {
+            if (class_exists('Spiral') && (self::$token == '' && self::$secret == '')) {
                 global $SPIRAL;
                 return new SpiralConnecter($SPIRAL);
             }
@@ -59,24 +60,24 @@ namespace framework\SpiralConnecter {
 
     abstract class SpiralModel
     {
-        protected string $primaryKey = 'id'; 
+        protected string $primaryKey = 'id';
 
         protected array $fields = [];
-        
+
         protected string $title = '';
-        
+
         protected $manager = null;
 
         abstract public function __construct();
 
         public function __get($name)
         {
-            if (in_array($name, $this->fields) || $name === 'id' ) {
+            if (in_array($name, $this->fields) || $name === 'id') {
                 return $this->$name ?? null;
             }
             throw new \Exception("Property {$name} does not exist.");
         }
-    
+
         public function __set($name, $value): void
         {
             if (in_array($name, $this->fields) || $name === 'id') {
@@ -100,7 +101,7 @@ namespace framework\SpiralConnecter {
             }
             return $this->manager;
         }
-         // 主キーによるレコードの取得
+        // 主キーによるレコードの取得
         public static function find($value)
         {
             $instance = new static();
@@ -128,25 +129,25 @@ namespace framework\SpiralConnecter {
         {
             $instance = new static();
             $data = $instance->getManager()->get();
-        
+
             $models = [];
-        
+
             if ($data) {
                 foreach ($data as $d) {
                     // データベースから取得したデータを使用して新しいインスタンスを作成
                     $modelInstance = new static();
-        
+
                     // 新しいインスタンスの各プロパティにデータを設定
                     foreach ($d as $key => $value) {
                         if (property_exists($modelInstance, $key)) {
                             $modelInstance->$key = $value;
                         }
                     }
-        
+
                     $models[] = $modelInstance;
                 }
             }
-        
+
             return $models;
         }
 
@@ -156,13 +157,13 @@ namespace framework\SpiralConnecter {
             // モデルのプロパティを連想配列として取得
             $allProperties = get_object_vars($this);
 
-            $data = array_filter($allProperties, function($key) {
+            $data = array_filter($allProperties, function ($key) {
                 return in_array($key, $this->fields);
             }, ARRAY_FILTER_USE_KEY);
-        
+
             // 主キーの値を取得
             $primaryKeyValue = $data[$this->primaryKey] ?? null;
-        
+
             if ($primaryKeyValue) {
                 // 主キーの値が存在する場合、更新または挿入を行う
                 $this->getManager()->upsert($this->primaryKey, $data);

@@ -27,10 +27,11 @@ class Router
      */
     public function __construct()
     {
-        
+
     }
 
-    public function setServiceProvider(ServiceProvider $serviceProvider){
+    public function setServiceProvider(ServiceProvider $serviceProvider)
+    {
         $this->serviceProvider = $serviceProvider;
     }
 
@@ -47,7 +48,7 @@ class Router
         $handler
     ): Route {
 
-        if(!empty(self::$prefix)){
+        if(!empty(self::$prefix)) {
             $pass = (ltrim($pass, '/') === '') ? self::$prefix : self::$prefix.'/'.ltrim($pass, '/');
         }
         $route = new Route($method, $pass, $handler);
@@ -77,7 +78,7 @@ class Router
         foreach (self::$routes as $route) {
             if ($route->processable($request, $isMethodCheck)) {
                 $route->middleware($this->middlewares);
-                $result = $route->process($request, $route->service , $this->serviceProvider);
+                $result = $route->process($request, $route->service, $this->serviceProvider);
 
                 if ($result === false) {
                     continue;

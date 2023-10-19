@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 require_once 'framework/Http/Request/HttpRequestParameter.php';
 require_once 'framework/SpiralConnecter/SpiralConnecterInterface.php';
 require_once 'framework/Http/Request/HttpRequest.php';

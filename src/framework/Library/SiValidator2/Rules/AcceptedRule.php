@@ -9,7 +9,7 @@ class AcceptedRule implements RuleInterface
         return true;  // All types of values can be processed by this rule
     }
 
-    public function validate($value , array $allValues = []): bool
+    public function validate($value, array $allValues = []): bool
     {
         $acceptedValues = ["yes", "on", 1, true];
         return in_array($value, $acceptedValues, true);

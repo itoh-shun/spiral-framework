@@ -1,4 +1,5 @@
 <?php
+
 namespace SiValidator2\Rules;
 
 class MinRule implements RuleInterface
@@ -19,10 +20,10 @@ class MinRule implements RuleInterface
     {
         if (is_numeric($value)) {
             return $value >= $this->min;
-        } 
+        }
         if (is_string($value)) {
             return mb_strlen($value) >= $this->min;
-        } 
+        }
         if (is_array($value)) {
             return count($value) >= $this->min;
         }

@@ -6,7 +6,7 @@ interface RuleInterface
 {
     /**
      * Determines if the rule can process the given value.
-     * 
+     *
      * @param mixed $value
      * @return bool
      */
@@ -14,22 +14,22 @@ interface RuleInterface
 
     /**
      * Validates the given value.
-     * 
+     *
      * @param mixed $value
      * @return bool
      */
-    public function validate($value , array $allValues = []): bool;
+    public function validate($value, array $allValues = []): bool;
 
     /**
      * Returns the error message for the rule.
-     * 
+     *
      * @return string
      */
     public function message(): string;
 
     /**
      * Returns the name of the rule.
-     * 
+     *
      * @return string
      */
     public function name(): string;

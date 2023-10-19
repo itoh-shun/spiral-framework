@@ -17,8 +17,8 @@ class SpiralConnecter implements SpiralConnecterInterface
 
     public function __construct($spiral)
     {
-        
-        if(!RateLimiter::isRequestAllowed()){
+
+        if(!RateLimiter::isRequestAllowed()) {
             throw new Exception('Access frequency limit exceeded. scope is all api.', 801);
         }
 
@@ -29,14 +29,14 @@ class SpiralConnecter implements SpiralConnecterInterface
         XSpiralApiHeaderObject $header,
         HttpRequestParameter $httpRequestParameter
     ) {
-        if(class_exists('SpiralApiRequest')){
+        if(class_exists('SpiralApiRequest')) {
             $request = new \SpiralApiRequest();
         }
 
         foreach ($httpRequestParameter->toArray() as $key => $val) {
             $request->put($key, $val);
         }
-        
+
         $response = $this->apiCommunicator->request(
             $header->func(),
             $header->method(),

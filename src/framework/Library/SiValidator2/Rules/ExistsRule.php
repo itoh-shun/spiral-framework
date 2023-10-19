@@ -1,4 +1,5 @@
 <?php
+
 namespace SiValidator2\Rules;
 
 use framework\SpiralConnecter\SpiralDB;

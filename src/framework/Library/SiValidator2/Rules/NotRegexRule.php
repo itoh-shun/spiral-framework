@@ -1,6 +1,7 @@
 <?php
 
 namespace SiValidator2\Rules;
+
 class NotRegexRule implements RuleInterface
 {
     protected $pattern;

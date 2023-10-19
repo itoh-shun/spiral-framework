@@ -5,18 +5,19 @@ namespace framework\Support;
 use Closure;
 use Exception;
 
-class ServiceProvider {
+class ServiceProvider
+{
     private $definitions = [];
     private $instances = [];
 
     // サービスを登録します
-    public function register($name, $definition):void
+    public function register($name, $definition): void
     {
         $this->definitions[$name] = $definition;
     }
 
     // サービスを取得します
-    public function get($name) : void
+    public function get($name): void
     {
         // インスタンスが既に存在する場合はそれを返す
         if (isset($this->instances[$name])) {

@@ -8,7 +8,7 @@ namespace framework\SpiralConnecter {
         protected array $fields = [];
 
         private static string $token = '';
-        
+
         private static string $secret = '';
 
         private static ?SpiralConnecterInterface $connecter = null;
@@ -31,7 +31,7 @@ namespace framework\SpiralConnecter {
 
         public static function getConnection()
         {
-            if (class_exists('Spiral') && ( self::$token == '' && self::$secret == '')) {
+            if (class_exists('Spiral') && (self::$token == '' && self::$secret == '')) {
                 global $SPIRAL;
                 return new SpiralConnecter($SPIRAL);
             }

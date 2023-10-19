@@ -1,4 +1,5 @@
 <?php
+
 namespace SiValidator2\Rules;
 
 class MaxBytesRule implements RuleInterface
@@ -30,7 +31,8 @@ class MaxBytesRule implements RuleInterface
         return 'max_bytes';
     }
 
-    protected function getAdjustedByteLength($str) {
+    protected function getAdjustedByteLength($str)
+    {
         $length = 0;
         for ($i = 0; $i < mb_strlen($str, 'UTF-8'); $i++) {
             $char = mb_substr($str, $i, 1, 'UTF-8');

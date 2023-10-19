@@ -164,7 +164,7 @@ class Collection extends stdClass
     {
         return $this->{$name};
     }
-    
+
     public function remove($name)
     {
         $old = $this->{$name};

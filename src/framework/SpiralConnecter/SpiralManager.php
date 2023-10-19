@@ -144,7 +144,8 @@ class SpiralManager
         return $this;
     }
 
-    public function groupBy($value){
+    public function groupBy($value)
+    {
         $this->fields = [];
         if (is_array($value)) {
             $this->fields = $value;
@@ -210,7 +211,7 @@ class SpiralManager
                 $db->setDbAsName($joinTitle::$dbAsName);
             }
         }
-        else 
+        else
         {
             $db = SpiralDB::title($joinTitle);
         }
@@ -249,7 +250,7 @@ class SpiralManager
             {
                 $j['callable']($joinDb);
             }
-            else 
+            else
             {
                 foreach( $col as $c )
                 {
@@ -281,7 +282,7 @@ class SpiralManager
             }
         }
 
-        
+
         return new Collection($col);
     }
 
@@ -513,12 +514,12 @@ class SpiralManager
         return $res;
     }
 
-    public function getFile($fileField , $keyField , $value)
+    public function getFile($fileField, $keyField, $value)
     {
-        $this->request->set('db_title',$this->request->get('db_title'));
-        $this->request->set('file_field_title',$fileField);
-        $this->request->set('key_field_title',$keyField);
-        $this->request->set('key_field_value',$value);
+        $this->request->set('db_title', $this->request->get('db_title'));
+        $this->request->set('file_field_title', $fileField);
+        $this->request->set('key_field_title', $keyField);
+        $this->request->set('key_field_value', $value);
         $xSpiralApiHeader = new XSpiralApiHeaderObject('database', 'get_file');
         return $this->connection->request($xSpiralApiHeader, $this->request);
     }
@@ -561,7 +562,7 @@ class SpiralManager
 
         foreach (array_chunk($data, 1000) as $d) {
             $this->request->set('data', $d);
-            
+
             $this->connection->request($xSpiralApiHeader, $this->request);
         }
 
@@ -583,7 +584,7 @@ class SpiralManager
         return (int) $res['count'];
     }
 
-    public function upsert($uniqKey , $upsert)
+    public function upsert($uniqKey, $upsert)
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject('database', 'upsert');
 

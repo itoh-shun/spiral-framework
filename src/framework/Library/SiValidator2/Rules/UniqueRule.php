@@ -3,6 +3,7 @@
 namespace SiValidator2\Rules;
 
 use framework\SpiralConnecter\SpiralDB;
+
 class UniqueRule implements RuleInterface
 {
     protected $model;
@@ -29,9 +30,9 @@ class UniqueRule implements RuleInterface
 
     public function validate($value, array $allValues = []): bool
     {
-        $query = $this->model->where($this->column, $value );
+        $query = $this->model->where($this->column, $value);
         if ($this->ignoreId !== null) {
-            $query->where($this->ignoreColumn, $this->ignoreId , '!=');
+            $query->where($this->ignoreColumn, $this->ignoreId, '!=');
         }
         return !$query->get()->count() > 0;
     }

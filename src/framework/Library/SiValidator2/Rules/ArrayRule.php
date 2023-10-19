@@ -16,7 +16,7 @@ class ArrayRule implements RuleInterface
         return is_scalar($value) || is_null($value);
     }
 
-    public function validate($value , $allValues = []): bool
+    public function validate($value, $allValues = []): bool
     {
         return in_array($value, $this->allowed_values, true);
     }

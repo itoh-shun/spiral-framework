@@ -24,26 +24,26 @@ SiValidator::defineRule('accepted_if:other,operator,if_value', function (
     }
     if ($values[$param['other']] != '' && !is_null($values[$param['other']])) {
         if ($param['operator'] === '==') {
-if (!($values[$param['other']] == $param['if_value'])) {
-    return true;
-}
-if (
-    $values[$param['other']] == $param['if_value'] &&
-    in_array($value, $validate, true)
-) {
-    return true;
-}
+            if (!($values[$param['other']] == $param['if_value'])) {
+                return true;
+            }
+            if (
+                $values[$param['other']] == $param['if_value'] &&
+                in_array($value, $validate, true)
+            ) {
+                return true;
+            }
         }
         if ($param['operator'] === '!=') {
-if (!($values[$param['other']] != $param['if_value'])) {
-    return true;
-}
-if (
-    $values[$param['other']] != $param['if_value'] &&
-    in_array($value, $validate, true)
-) {
-    return true;
-}
+            if (!($values[$param['other']] != $param['if_value'])) {
+                return true;
+            }
+            if (
+                $values[$param['other']] != $param['if_value'] &&
+                in_array($value, $validate, true)
+            ) {
+                return true;
+            }
         }
     }
     return false;
@@ -71,26 +71,26 @@ SiValidator::defineRule('declined_if:other,operator,if_value', function (
     }
     if ($values[$param['other']] != '' && !is_null($values[$param['other']])) {
         if ($param['operator'] === '==') {
-if (!($values[$param['other']] == $param['if_value'])) {
-    return true;
-}
-if (
-    $values[$param['other']] == $param['if_value'] &&
-    in_array($value, $validate, true)
-) {
-    return true;
-}
+            if (!($values[$param['other']] == $param['if_value'])) {
+                return true;
+            }
+            if (
+                $values[$param['other']] == $param['if_value'] &&
+                in_array($value, $validate, true)
+            ) {
+                return true;
+            }
         }
         if ($param['operator'] === '!=') {
-if (!($values[$param['other']] != $param['if_value'])) {
-    return true;
-}
-if (
-    $values[$param['other']] != $param['if_value'] &&
-    in_array($value, $validate, true)
-) {
-    return true;
-}
+            if (!($values[$param['other']] != $param['if_value'])) {
+                return true;
+            }
+            if (
+                $values[$param['other']] != $param['if_value'] &&
+                in_array($value, $validate, true)
+            ) {
+                return true;
+            }
         }
     }
     return false;
@@ -114,13 +114,13 @@ SiValidator::defineRule('after:other', function (
 '/^([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日$/';
         $other = null;
         if (preg_match($FORMAT_DELIMITER_SLASH, $v)) {
-$other = DateTime::createFromFormat('Y/m/d', $v);
+            $other = DateTime::createFromFormat('Y/m/d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_HYPHEN, $v)) {
-$other = DateTime::createFromFormat('Y-m-d', $v);
+            $other = DateTime::createFromFormat('Y-m-d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_JAPANESE_CHARACTER, $v)) {
-$other = DateTime::createFromFormat('Y年m月d日', $v);
+            $other = DateTime::createFromFormat('Y年m月d日', $v);
         }
         return $other;
     };
@@ -134,7 +134,7 @@ $other = DateTime::createFromFormat('Y年m月d日', $v);
 
     if (
         strtotime(
-$changeDate($values[$param['other']])->format('Y-m-d H:i:s')
+            $changeDate($values[$param['other']])->format('Y-m-d H:i:s')
         ) <= strtotime($changeDate($value)->format('Y-m-d H:i:s'))
     ) {
         return true;
@@ -157,13 +157,13 @@ SiValidator::defineRule('date_equals:date', function ($value, array $param) {
 '/^([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日$/';
         $other = null;
         if (preg_match($FORMAT_DELIMITER_SLASH, $v)) {
-$other = DateTime::createFromFormat('Y/m/d', $v);
+            $other = DateTime::createFromFormat('Y/m/d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_HYPHEN, $v)) {
-$other = DateTime::createFromFormat('Y-m-d', $v);
+            $other = DateTime::createFromFormat('Y-m-d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_JAPANESE_CHARACTER, $v)) {
-$other = DateTime::createFromFormat('Y年m月d日', $v);
+            $other = DateTime::createFromFormat('Y年m月d日', $v);
         }
         return $other;
     };
@@ -199,13 +199,13 @@ SiValidator::defineRule('before:other', function (
 '/^([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日$/';
         $other = null;
         if (preg_match($FORMAT_DELIMITER_SLASH, $v)) {
-$other = DateTime::createFromFormat('Y/m/d', $v);
+            $other = DateTime::createFromFormat('Y/m/d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_HYPHEN, $v)) {
-$other = DateTime::createFromFormat('Y-m-d', $v);
+            $other = DateTime::createFromFormat('Y-m-d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_JAPANESE_CHARACTER, $v)) {
-$other = DateTime::createFromFormat('Y年m月d日', $v);
+            $other = DateTime::createFromFormat('Y年m月d日', $v);
         }
         return $other;
     };
@@ -219,7 +219,7 @@ $other = DateTime::createFromFormat('Y年m月d日', $v);
 
     if (
         strtotime(
-$changeDate($values[$param['other']])->format('Y-m-d H:i:s')
+            $changeDate($values[$param['other']])->format('Y-m-d H:i:s')
         ) >= strtotime($changeDate($value)->format('Y-m-d H:i:s'))
     ) {
         return true;
@@ -241,13 +241,13 @@ SiValidator::defineRule('date', function ($value) {
 '/^([0-9]{4}|[0-9]{3}|[0-9]{2}|[0-9]{1})年([1-9]|0[1-9]|1[0-2])月([1-9]|0[1-9]|[12][0-9]|3[01])日$/';
         $other = null;
         if (preg_match($FORMAT_DELIMITER_SLASH, $v)) {
-$other = DateTime::createFromFormat('Y/m/d', $v);
+            $other = DateTime::createFromFormat('Y/m/d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_HYPHEN, $v)) {
-$other = DateTime::createFromFormat('Y-m-d', $v);
+            $other = DateTime::createFromFormat('Y-m-d', $v);
         }
         if (preg_match($FORMAT_DELIMITER_JAPANESE_CHARACTER, $v)) {
-$other = DateTime::createFromFormat('Y年m月d日', $v);
+            $other = DateTime::createFromFormat('Y年m月d日', $v);
         }
         return $other;
     };
@@ -397,8 +397,8 @@ SiValidator::defineRule('digits:num', function ($value, $param, $ctx) {
         $digit = 0;
 
         while (1 <= $number) {
-$number /= 10;
-$digit++;
+            $number /= 10;
+            $digit++;
         }
     };
 

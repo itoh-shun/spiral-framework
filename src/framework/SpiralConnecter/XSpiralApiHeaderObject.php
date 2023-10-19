@@ -1,6 +1,7 @@
 <?php
 
 namespace framework\SpiralConnecter;
+
 class XSpiralApiHeaderObject
 {
     private string $func = '';

@@ -2,8 +2,10 @@
 
 namespace SiValidator2\Rules;
 
-abstract class RegexBasedRule implements RuleInterface {
-    public function validate($value, array $allValues = []): bool {
+abstract class RegexBasedRule implements RuleInterface
+{
+    public function validate($value, array $allValues = []): bool
+    {
         if (!is_string($value)) {
             return false;
         }
@@ -11,7 +13,8 @@ abstract class RegexBasedRule implements RuleInterface {
     }
 
     abstract protected function pattern(): string;
-    public static function processable($value): bool {
+    public static function processable($value): bool
+    {
         return true;
     }
 }

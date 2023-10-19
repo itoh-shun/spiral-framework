@@ -1,9 +1,12 @@
 <?php
+
 // ビューの生成
+
 namespace framework\Http;
 
 use Collection;
 use stdClass;
+
 class View
 {
     protected $file = null;

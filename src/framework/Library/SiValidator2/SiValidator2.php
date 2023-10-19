@@ -106,11 +106,11 @@ class SiValidator2
             if (strpos($field, '.*') !== false) {
                 $baseField = preg_replace('/\.\*$/', '', $field);
                 $arrayValues = self::getValueByPath($values, $baseField);
-                
+
                 if (is_array($arrayValues)) {
                     foreach ($arrayValues as $index => $subValue) {
                         $subLabels = [];
-                        foreach($labels as $labelKey => $labelValue){
+                        foreach($labels as $labelKey => $labelValue) {
                             $subLabelKey = str_replace('.*', ".{$index}", $labelKey);
                             $subLabels[$subLabelKey] =  $labelValue;
                         }
@@ -127,7 +127,7 @@ class SiValidator2
 
         return new SiValidator2($results);
     }
-    
+
     private static function getValueByPath($array, $path)
     {
         $segments = explode('.', $path);
@@ -143,13 +143,14 @@ class SiValidator2
         return $array;
     }
 
-    private static function applyRules($field,$value, $ruleList, $allValues, $label, $translations, $messages) {
+    private static function applyRules($field, $value, $ruleList, $allValues, $label, $translations, $messages)
+    {
         $results = [];
 
-        if (in_array('nullable', $ruleList) && ( $value === null || $value === '' )) {
+        if (in_array('nullable', $ruleList) && ($value === null || $value === '')) {
             return $results;  // Return empty results, as other validations should be skipped
         }
-        
+
         foreach ($ruleList as $rule) {
             $parameters = [];
             $placeholders = [];
@@ -174,9 +175,9 @@ class SiValidator2
                     $rule = new $ruleClass();
                 }
             }
-            
-            foreach($parameters as $k => $parameter){
-                if(array_key_exists($parameter,$allValues)) {
+
+            foreach($parameters as $k => $parameter) {
+                if(array_key_exists($parameter, $allValues)) {
                     $parameters[$k] = $allValues[$parameter];
                 }
             }
@@ -186,11 +187,11 @@ class SiValidator2
                 if (!$isValid && in_array($rule->name(), ['exclude_if', 'exclude_unless', 'exclude_without'])) {
                     continue;
                 }
-                $messageTemplate = $messages[$field][$rule->name()] ?? 
-                    $translations[self::$currentLang][$rule->name()] ?? 
+                $messageTemplate = $messages[$field][$rule->name()] ??
+                    $translations[self::$currentLang][$rule->name()] ??
                     $rule->message();
 
-                    // Replace placeholders in the message
+                // Replace placeholders in the message
                 foreach ($placeholders as $index => $placeholder) {
                     $messageTemplate = str_replace(":$placeholder", $parameters[$index] ?? '', $messageTemplate);
                 }

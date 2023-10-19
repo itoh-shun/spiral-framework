@@ -1,4 +1,5 @@
 <?php
+
 namespace framework\Routing;
 
 use Closure;
@@ -85,7 +86,7 @@ class Route
             }
         }
 
-        if ($this->processMiddleware($request , $serviceProvider , $vars) === false) {
+        if ($this->processMiddleware($request, $serviceProvider, $vars) === false) {
             return false;
         }
 
@@ -109,7 +110,7 @@ class Route
 
         $action = $this->action;
         //__constract Method実行
-        $instance = new $handler($request , $serviceProvider);
+        $instance = new $handler($request, $serviceProvider);
 
         if ($service == null) {
             return $instance->$action($vars);

@@ -57,7 +57,7 @@ class Request
     public function getRequestUri(): string
     {
         //return $_SERVER['REQUEST_URI'];
-        
+
         if (!isset($this->request[self::$pathkey])) {
             return '';
         }

@@ -59,7 +59,7 @@ class SpiralWebManager
         $this->orderBy = new OrderBy($field, $ascOrDesc);
         return $this;
     }
-    public function where(string $field, string $value, int $exists = 0 , string $exType = '' , int $action = 0)
+    public function where(string $field, string $value, int $exists = 0, string $exType = '', int $action = 0)
     {
         $this->searchCondition[] = [
             'name' => $field,
@@ -77,7 +77,7 @@ class SpiralWebManager
         $this->request->set('lines_per_page', $limit);
         $this->request->set('search_title', $this->searchTitle);
         $this->request->set('my_area_title', $this->myAreaTitle);
-        if(!empty($this->orderBy)){
+        if(!empty($this->orderBy)) {
             $this->request->set('sort', [$this->orderBy->getRequestParam()]);
         }
         $this->request->set(
@@ -86,7 +86,7 @@ class SpiralWebManager
         );
         $this->request->set('page', $this->page);
         $this->request->set('jsessionid', $this->jsessionid);
-        
+
         $xSpiralApiHeader = new XSpiralApiHeaderObject('table', 'data');
 
         return $this->connection->request(

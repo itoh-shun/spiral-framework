@@ -9,7 +9,7 @@ class RequiredRule implements RuleInterface
         return true;  // All types of values can be processed by this rule
     }
 
-    public function validate($value , array $allValues = []): bool
+    public function validate($value, array $allValues = []): bool
     {
         if (is_null($value)) {
             return false;

@@ -2,14 +2,17 @@
 
 namespace SiValidator2\Rules;
 
-abstract class DateComparisonRule implements RuleInterface {
+abstract class DateComparisonRule implements RuleInterface
+{
     protected $referenceDateOrField;
 
-    public function __construct($referenceDateOrField) {
+    public function __construct($referenceDateOrField)
+    {
         $this->referenceDateOrField = $referenceDateOrField;
     }
 
-    public function validate($value, array $allValues = []): bool {
+    public function validate($value, array $allValues = []): bool
+    {
         if (!$this->processable($value)) {
             return false;
         }
@@ -34,7 +37,8 @@ abstract class DateComparisonRule implements RuleInterface {
 
     abstract protected function compareDates($valueDate, $refDate): bool;
 
-    public static function processable($value): bool {
+    public static function processable($value): bool
+    {
         return is_string($value);
     }
 }

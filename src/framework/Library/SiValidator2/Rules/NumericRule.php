@@ -1,4 +1,5 @@
 <?php
+
 namespace SiValidator2\Rules;
 
 class NumericRule implements RuleInterface

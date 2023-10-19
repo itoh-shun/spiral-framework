@@ -1,4 +1,5 @@
 <?php
+
 namespace framework\SpiralConnecter;
 
 use Collection;

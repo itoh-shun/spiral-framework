@@ -13,7 +13,7 @@ class RegexRule implements RuleInterface
 
     public static function processable($value, $field = null): bool
     {
-        
+
         return is_string($value);
     }
 
