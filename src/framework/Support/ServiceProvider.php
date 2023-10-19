@@ -17,7 +17,7 @@ class ServiceProvider
     }
 
     // サービスを取得します
-    public function get($name): void
+    public function get($name)
     {
         // インスタンスが既に存在する場合はそれを返す
         if (isset($this->instances[$name])) {

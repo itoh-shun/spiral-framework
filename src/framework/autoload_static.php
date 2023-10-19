@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 require_once 'framework/Http/Request/HttpRequestParameter.php';
 require_once 'framework/SpiralConnecter/SpiralConnecterInterface.php';
 require_once 'framework/Http/Request/HttpRequest.php';
@@ -24,9 +23,9 @@ require_once 'framework/SpiralConnecter/Paginator.php';
 require_once 'framework/SpiralConnecter/SpiralRedis.php';
 require_once 'framework/SpiralConnecter/SpiralExpressManager.php';
 require_once 'framework/Exception/ClassNotFoundException.php';
+require_once 'framework/Support/ServiceProvider.php';
 require_once 'framework/Http/Middleware/MiddlewareTrait.php';
 require_once 'framework/Http/Response/Response.php';
-require_once 'framework/Support/ServiceProvider.php';
 require_once 'framework/Routing/Route.php';
 require_once 'framework/Http/Middleware/MiddlewareRouterTrait.php';
 require_once 'framework/Http/Middleware/PrefixTrait.php';
@@ -98,7 +97,7 @@ require_once 'framework/Http/Middleware/VerifyCsrfTokenMiddleware.php';
 require_once 'framework/Http/Response/ApiResponse.php';
 require_once 'framework/Exception/ExceptionHandler.php';
 require_once 'framework/Http/Kernel.php';
+require_once 'framework/resources/error.blade.php';
 require_once 'framework/Exception/DependencyResolveFailedException.php';
 require_once 'framework/Core/Config.php';
-require_once 'framework/Core/ServiceProvider.php';
 require_once 'framework/Core/Func.php';
