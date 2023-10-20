@@ -60,7 +60,7 @@ class SpiralApiConnecter implements SpiralConnecterInterface
         );
 
         $request->setUrl($this->location);
-
+var_dump($httpRequestParameter);
         $response = $request->post($httpRequestParameter);
 
 

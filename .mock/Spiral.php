@@ -15,6 +15,31 @@ class Spiral{
     }
     
     public function getCache(int $_timeout = 900){
+        return new class {
+            public $data = [];
+            function decr($key,int $val){
+                $this->data[$key] = $this->data[$key] -= $val;
+            }
+            function delete($key){
+                unset($this->data[$key]);
+            }
+            function exists($key){
+                return array_key_exists($key , $this->data);
+            }
+            function get($key){
+                return $this->data[$key];
+            }
+            function incr($key,int $val){
+                if(is_int($this->data[$key])){
+                    $this->data[$key] = $this->data[$key] += $val;
+                };
+            }
+            function set($key, $val){
+                $this->data[$key] = $val;
+            }
+            function setTimeout($int){
+            }
+        };
     }
 
     public function getCardId(){

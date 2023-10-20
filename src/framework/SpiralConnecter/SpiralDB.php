@@ -63,11 +63,11 @@ namespace framework\SpiralConnecter {
 
         protected array $fields = [];
 
-        protected string $title = '';
+        protected string $db_title = '';
 
         protected $manager = null;
 
-        abstract public function __construct();
+        public function __construct(){}
 
         public function __get($name)
         {
@@ -89,7 +89,7 @@ namespace framework\SpiralConnecter {
         protected function init()
         {
             $this->manager = (new SpiralManager(SpiralDB::getConnection()))
-                ->setTitle($this->title)
+                ->setTitle($this->db_title)
                 ->fields($this->fields);
         }
 

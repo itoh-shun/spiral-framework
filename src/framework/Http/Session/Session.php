@@ -110,7 +110,13 @@ class RequestSession
 
     public function put(string $key, $value)
     {
-        return Session::put($key, $value);
+        Session::put($key, $value);
+    }
+    public function pull(string $key)
+    {
+        $old = Session::get($key);
+        Session::forget($key);
+        return $old;
     }
 
     public function has(string $key)

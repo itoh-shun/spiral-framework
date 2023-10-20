@@ -8,38 +8,60 @@ class SpiralRedis
 
     public function __construct()
     {
-        $this->cache = spiral()->getCache();
+        if(spiral()){
+            $this->cache = spiral()->getCache();
+        }
     }
 
     public function get($key)
     {
-        return $this->cache->get($key);
+        if($this->cache){ 
+            return $this->cache->get($key);
+        }
+        return '';
     }
 
     public function set($key, $value): void
     {
-        $this->cache->set($key, $value);
+        if($this->cache){ 
+            $this->cache->set($key, $value);
+        }
     }
 
     public function exists($key)
     {
-        return $this->cache->exists($key);
+        if($this->cache){ 
+            return $this->cache->exists($key);
+        }
+        return '';
     }
 
     public function delete($key)
     {
-        return $this->cache->delete($key);
+        if($this->cache){ 
+            return $this->cache->delete($key);
+        }
+        return '';
     }
     public function decr($key, $value = 1)
     {
-        return $this->cache->decr($key, $value);
+        if($this->cache){ 
+            return $this->cache->decr($key, $value);
+        }
+        return '';
     }
     public function incr($key, $value = 1)
     {
-        return $this->cache->incr($key, $value);
+        if($this->cache){ 
+            return $this->cache->incr($key, $value);
+        }
+        return '';
     }
     public function setTimeout($timeout = 900)
     {
-        return $this->cache->setTimeout($timeout);
+        if($this->cache){ 
+            return $this->cache->setTimeout($timeout);
+        }
+        return '';
     }
 }

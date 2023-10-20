@@ -32,7 +32,7 @@ class Kernel
     final public function handle(Request $request)
     {
         $this->app->boot();
-        $this->router->setServiceProvider($this->app->serviceProvider);
+        $this->router::setServiceProvider($this->app->serviceProvider);
         // add global middleware.
         // $this->router->middleware($this->middlewares);
         try {

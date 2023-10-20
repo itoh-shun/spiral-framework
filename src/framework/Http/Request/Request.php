@@ -106,6 +106,11 @@ class Request
         }
         return $this->get('_method');
     }
+    
+    public function setMethod($method): void
+    {
+        $this->set('_method',$method);
+    }
 
     public function get($key, $default = '')
     {

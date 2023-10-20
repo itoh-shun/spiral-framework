@@ -18,7 +18,7 @@ class Router
 
     public static array $routes = [];
 
-    private ?ServiceProvider $serviceProvider;
+    private static ?ServiceProvider $serviceProvider;
 
     /**
      * Router constructor.
@@ -30,9 +30,9 @@ class Router
 
     }
 
-    public function setServiceProvider(ServiceProvider $serviceProvider)
+    public static function setServiceProvider(ServiceProvider $serviceProvider)
     {
-        $this->serviceProvider = $serviceProvider;
+        self::$serviceProvider = $serviceProvider;
     }
 
     /**
@@ -78,7 +78,7 @@ class Router
         foreach (self::$routes as $route) {
             if ($route->processable($request, $isMethodCheck)) {
                 $route->middleware($this->middlewares);
-                $result = $route->process($request, $route->service, $this->serviceProvider);
+                $result = $route->process($request, $route->service, self::$serviceProvider);
 
                 if ($result === false) {
                     continue;
