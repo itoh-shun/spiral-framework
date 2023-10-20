@@ -15,6 +15,11 @@ class DatabaseSchemaCheck extends Command
     {
         return $this->serialize;
     }
+    
+    protected function defineOptions()
+    {
+        $this->addOption('n', 'name', 'Specify the database name' , true);
+    }
 
     public function execute(CommandArgv $commandArgv)
     {
@@ -41,23 +46,19 @@ class DatabaseSchemaCheck extends Command
             $this->line('Not configured...');
             return null;
         }
+        $db_title = $this->getOptionValue('name');
+        if (!$db_title) {
+            $db_title = $this->ask("Please specify database name: ");
+        }
 
         $this->schemacheck(
             $environments['deploy'][$environment],
-            $commandArgv
+            $db_title
         );
     }
 
-    private function schemacheck($config, CommandArgv $commandArgv)
+    private function schemacheck($config, string $db_title)
     {
-
-        $db_title = '';
-        if (
-            !empty($commandArgv->__get('options'))
-        ) {
-            $db_title = $commandArgv->__get('options')[0];
-        }
-
         $API_TOKEN = $config['token'];
         $API_SECRET = $config['secret'];
 

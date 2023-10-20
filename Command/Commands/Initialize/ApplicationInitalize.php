@@ -14,7 +14,13 @@ class ApplicationInitalize extends Command {
     
     public function __construct(CreateProjectInteractorInputPortInterface $createProjectInteractor)
     {
+        parent::__construct();
         $this->inputPort = $createProjectInteractor;
+    }
+
+    protected function defineOptions()
+    {
+        $this->addOption('n', 'name', 'Specify the project name' , true);
     }
 
     public function getSerialize()
@@ -24,16 +30,19 @@ class ApplicationInitalize extends Command {
     
     public function execute(CommandArgv $commandArgv)
     {
-//      ApplicationInitalizeInputData();
         $this->line('Welcome Spiral Frame !!!!');
-        $projectName = $this->ask("Please specify project name: ");
+        
+        // Check if the name option is set, otherwise ask for it
+        $projectName = $this->getOptionValue('name');
+        if (!$projectName) {
+            $projectName = $this->ask("Please specify project name: ");
+        }
+
         $inputData = new CreateProjectInteractorInputData(['projectName' => $projectName]);
         $this->inputPort->execute($inputData);
 
-  
         if (!file_exists("composer.json")) {
             exec("composer init");
         }
-
     }
 }

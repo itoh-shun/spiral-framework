@@ -16,9 +16,14 @@ class ApplicationDeploy extends Command
         return $this->serialize;
     }
 
+    protected function defineOptions()
+    {
+        $this->addOption('s', 'skip', '指定するとGitの差分を反映します。' , false);
+    }
+
     public function execute(CommandArgv $commandArgv)
     {
-        //      ApplicationInitalizeInputData();
+        //ApplicationInitalizeInputData();
         $this->line('Welcome Spiral Frame !!!!');
         /*
         $bool = $this->ask("Reflects everything under the src directory. [yes , no] : " , false);
@@ -42,15 +47,14 @@ class ApplicationDeploy extends Command
             return null;
         }
 
-        $response = $this->createZip($environment, $commandArgv);
+        $response = $this->createZip($environment);
         $this->deploy(
             $response['filename'],
-            $environments['deploy'][$environment],
-            $commandArgv
+            $environments['deploy'][$environment]
         );
     }
 
-    private function deploy($filename, $config, CommandArgv $commandArgv)
+    private function deploy($filename, $config)
     {
         $MULTIPART_BOUNDARY = 'SPIRAL_API_MULTIPART_BOUNDARY';
         $API_TOKEN = $config['token'];
@@ -134,16 +138,9 @@ class ApplicationDeploy extends Command
         return true;
     }
 
-    private function createZip($environment, CommandArgv $commandArgv)
+    private function createZip($environment)
     {
-        $skip = false;
-        if (
-            !empty($commandArgv->__get('options')) &&
-            $commandArgv->__get('options')[0] === '--skip'
-        ) {
-            $skip = true;
-        }
-
+        $skip = $this->getOptionValue('skip');
         if (file_exists('.tmp')) {
             exec('rm -rf .tmp');
         }
@@ -209,14 +206,15 @@ class ApplicationDeploy extends Command
                 "git add -N .; git diff --name-only --relative=src/ $commitId | xargs -I % cp -r --parents ./src/% .tmp/$environment > /dev/null 2>&1"
             );
             
-            exec("cp -r spiral-framework/src/* .tmp/$environment");
-            exec("mv .tmp/$environment/src/* .tmp/$environment");
-            rmdir(".tmp/$environment/src");
-
+            if (file_exists(".tmp/$environment/src")) {
+                exec("mv .tmp/$environment/src/* .tmp/$environment");
+                $this->rmdir_recursively(".tmp/$environment/src");
+            }
         } else {
-            exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("cp -r src/* .tmp/$environment");
         }
+        
+        exec("cp -r spiral-framework/src/* .tmp/$environment");
 
         $filelist = glob(".tmp/$environment/*");
         foreach ($filelist as $file) {

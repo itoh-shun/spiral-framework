@@ -6,8 +6,68 @@ use Command\Basis\Request\CommandArgv;
 
 abstract class Command
 {
+    public $options = [];
+    protected $optionValues = [];
+
     abstract function getSerialize();
     abstract function execute(CommandArgv $commandArgv);
+    abstract protected function defineOptions();
+
+    public function __construct()
+    {
+        $this->defineOptions();
+    }
+
+    /**
+     * オプションを追加するためのメソッド
+     */
+    protected function addOption($short, $long, $description, $hasValue = false, $multipleValues = false)
+    {
+        $this->options[$long] = [
+            'short' => $short,
+            'long' => $long,
+            'description' => $description,
+            'hasValue' => $hasValue,
+            'multipleValues' => $multipleValues,
+            'value' => [],
+        ];
+    }
+
+    /**
+     * オプションの値を取得するためのメソッド
+     */
+    public function getOptionValue($name)
+    {
+        return $this->options[$name]['value'] ?? null;
+    }
+
+    /**
+     * コマンドラインのオプションを解析し、オプションの値をセットするメソッド
+     */
+    public function parseOptions(CommandArgv $commandArgv)
+    {
+        for ($i = 0; $i < count($commandArgv->options); $i++) {
+            $arg = $commandArgv->options[$i];
+
+            foreach ($this->options as &$option) {
+                if ($arg === '--' . $option['long'] || $arg === '-' . $option['short']) {
+                    if ($option['hasValue']) {
+                        if ($option['multipleValues']) {
+                            while (isset($commandArgv->options[$i + 1]) && strpos($commandArgv->options[$i + 1], '-') !== 0) {
+                                $option['value'][] = $commandArgv->options[++$i];
+                            }
+                        } else {
+                            $option['value'][] = $commandArgv->options[++$i];
+                        }
+                    } else {
+                        $option['value'] = true; // 値を持たないオプションの場合、trueを設定
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
 
     /**
      * 画面に文字を表示：末尾に改行なし

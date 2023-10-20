@@ -16,18 +16,14 @@ class DatabaseDelete extends Command
         return $this->serialize;
     }
 
+    protected function defineOptions()
+    {
+        $this->addOption('n', 'name', 'Specify the database name' , true);
+    }
+
     public function execute(CommandArgv $commandArgv)
     {
-        //      ApplicationInitalizeInputData();
         $this->line('Welcome Spiral Frame !!!!');
-        /*
-        $bool = $this->ask("Reflects everything under the src directory. [yes , no] : " , false);
-        if($bool !== "yes" && $bool !== 'y')
-        {
-            $this->line('Cancelled.');
-            return null;
-        }
-        */
         $environments = $this->config();
 
         $environment = $this->ask(
@@ -42,21 +38,21 @@ class DatabaseDelete extends Command
             return null;
         }
 
+        
+        $db_title = $this->getOptionValue('name');
+        if (!$db_title) {
+            $db_title = $this->ask("Please specify database name: ");
+        }
+
+
         $this->delete(
             $environments['deploy'][$environment],
-            $commandArgv
+            $db_title
         );
     }
 
-    private function delete($config, CommandArgv $commandArgv)
+    private function delete($config, string $db_title)
     {
-
-        $db_title = '';
-        if (
-            !empty($commandArgv->__get('options'))
-        ) {
-            $db_titles = $commandArgv->__get('options');
-        }
 
         $API_TOKEN = $config['token'];
         $API_SECRET = $config['secret'];
@@ -95,32 +91,30 @@ class DatabaseDelete extends Command
             "Content-Type: application/json; charset=UTF-8",
         ];
 
-        foreach($db_titles as $db_title){
-            $parameters = [];
-            $parameters['spiral_api_token'] = $API_TOKEN;
-            $parameters['passkey'] = time();
-            $key = $parameters['spiral_api_token'] . '&' . $parameters['passkey'];
-            $parameters['signature'] = hash_hmac('sha1', $key, $API_SECRET, false);
-            $parameters['db_title'] = $db_title;
-            $parameters['force_drop'] = 't';
-            $json = json_encode($parameters);
-            $curl = curl_init($API_URL);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $api_headers);
-    
-            curl_exec($curl);
-            $response = curl_multi_getcontent($curl);
-            curl_close($curl);
-    
-            $response = json_decode($response, true);
-    
-            if ($response['code'] != 0) {
-                var_dump($db_title);
-                var_dump($response);
-                //return false;
-            }
+        $parameters = [];
+        $parameters['spiral_api_token'] = $API_TOKEN;
+        $parameters['passkey'] = time();
+        $key = $parameters['spiral_api_token'] . '&' . $parameters['passkey'];
+        $parameters['signature'] = hash_hmac('sha1', $key, $API_SECRET, false);
+        $parameters['db_title'] = $db_title;
+        $parameters['force_drop'] = 't';
+        $json = json_encode($parameters);
+        $curl = curl_init($API_URL);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $api_headers);
+
+        curl_exec($curl);
+        $response = curl_multi_getcontent($curl);
+        curl_close($curl);
+
+        $response = json_decode($response, true);
+
+        if ($response['code'] != 0) {
+            var_dump($db_title);
+            var_dump($response);
+            //return false;
         }
         return true;
     }

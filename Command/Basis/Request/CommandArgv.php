@@ -9,12 +9,12 @@ class CommandArgv {
 
     public function __construct($argv)
     {
-        $this->serialize = $argv[1];
-        
-        unset($argv[0]);
-        unset($argv[1]);
-        
-        $this->options = array_values($argv);
+        if(isset($argv[1])){
+            $this->serialize = $argv[1];
+            unset($argv[0]);
+            unset($argv[1]);
+            $this->options = array_values($argv);
+        }
     }
 
     public function getSerialize()

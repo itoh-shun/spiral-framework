@@ -17,10 +17,17 @@ class LocalBuild extends Command
     public function execute(CommandArgv $commandArgv)
     {
         $this->line('Welcome Spiral Frame !!!!');
-        $this->create($commandArgv);
+        $this->create();
+    }
+    
+    protected function defineOptions()
+    {
+        $this->addOption('p', 'port', 'port を指定してください' , true);
+        $this->addOption('d', 'dir', 'ディレクトリ を指定してください' , true);
+        $this->addOption('f', 'file', 'ルートファイル を指定してください' , true);
     }
 
-    private function create(CommandArgv $commandArgv)
+    private function create()
     {
         if (file_exists('.build')) {
             exec('rm -rf .build');
@@ -46,9 +53,9 @@ class LocalBuild extends Command
         exec("cp -r spiral-framework/.mock .build");
         exec("cp -r src/* .build");
 
-        $port = $commandArgv->__get('options')[0];
-        $dir = $commandArgv->__get('options')[1];
-        $routeFile = $commandArgv->__get('options')[2];
+        $port = $this->getOptionValue('port');
+        $dir = $this->getOptionValue('dir');
+        $routeFile = $this->getOptionValue('file');
 
         $file = fopen('.build/build.php', 'w');  // ファイルを開くまたは新規作成
         if ($file) {

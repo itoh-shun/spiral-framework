@@ -1,15 +1,6 @@
 <?php
-/**
-* php spiralframe app:init JoyPla
-* php spiralframe controller:make User
-* php spiralframe usecase:make User Index
-* php spiralframe repository:make User
-* php spiralframe presenter:make User Index
-* php spiralframe model:make User spiraldbtitle
-*/
 
 namespace Clarc\Basis\Console;
-
 
 use Clarc\Basis\Console\Command\Make\ClarcMakeCommand;
 use Clarc\Basis\Console\Input\StreamInput;
@@ -20,9 +11,7 @@ use Exception;
 
 class Kernel
 {
-    private $makeCommand;
-    private CommandArgv $commandArgv;
-    private Commander $commander;
+    private $commander;
 
     public function __construct(Commander $commander)
     {
@@ -31,17 +20,34 @@ class Kernel
 
     public function handle(CommandArgv $commandArgv)
     {
-        $command = $this->commander->dispatch($commandArgv);
-        if(is_null($command))
-        {
-            echo $this->commander->helper();
-            return ;
+        // Check for help options
+        if (in_array('-h', $commandArgv->options) || in_array('--help', $commandArgv->options)) {
+            $this->displayHelp();
+            return;
         }
 
-        try{
+        $command = $this->commander->dispatch($commandArgv);
+        if (is_null($command)) {
+            $this->commander->helper();
+            return;
+        }
+
+        // Parse options before executing the command
+        $command->parseOptions($commandArgv);
+        try {
             $command->execute($commandArgv);
-        } catch ( Exception $e) {
+        } catch (Exception $e) {
             echo $e->getMessage() . "\n";
         }
+    }
+
+    private function displayHelp()
+    {
+        echo "使用方法:\n";
+        echo "php spiralframe [command] [options]\n\n";
+        echo "利用可能なコマンド:\n";
+        $this->commander->helper();
+        echo "\nオプション:\n";
+        echo "-h, --help    ヘルプを表示\n";
     }
 }
