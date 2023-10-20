@@ -9,7 +9,7 @@ use Command\Commands\Interactor\CreateProjectInteractorInputPortInterface;
 
 class ApplicationInitalize extends Command {
 
-    private string $serialize = "app:init";
+    public string $serialize = "app:init";
     private CreateProjectInteractorInputPortInterface $inputPort;
     
     public function __construct(CreateProjectInteractorInputPortInterface $createProjectInteractor)
@@ -21,11 +21,6 @@ class ApplicationInitalize extends Command {
     protected function defineOptions()
     {
         $this->addOption('n', 'name', 'Specify the project name' , true);
-    }
-
-    public function getSerialize()
-    {
-        return $this->serialize;
     }
     
     public function execute(CommandArgv $commandArgv)

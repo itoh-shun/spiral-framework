@@ -9,12 +9,7 @@ use ZipArchive;
 
 class DatabaseDelete extends Command
 {
-    private string $serialize = 'database:delete';
-
-    public function getSerialize()
-    {
-        return $this->serialize;
-    }
+    public string $serialize = 'database:delete';
 
     protected function defineOptions()
     {

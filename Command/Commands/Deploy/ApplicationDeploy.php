@@ -9,12 +9,7 @@ use ZipArchive;
 
 class ApplicationDeploy extends Command
 {
-    private string $serialize = 'app:deploy';
-
-    public function getSerialize()
-    {
-        return $this->serialize;
-    }
+    public string $serialize = 'app:deploy';
 
     protected function defineOptions()
     {

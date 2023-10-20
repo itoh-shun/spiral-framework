@@ -8,8 +8,8 @@ abstract class Command
 {
     public $options = [];
     protected $optionValues = [];
+    public string $serialize;
 
-    abstract function getSerialize();
     abstract function execute(CommandArgv $commandArgv);
     abstract protected function defineOptions();
 
@@ -17,6 +17,12 @@ abstract class Command
     {
         $this->defineOptions();
     }
+    
+    public function getSerialize()
+    {
+        return $this->serialize;
+    }
+
 
     /**
      * オプションを追加するためのメソッド

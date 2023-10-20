@@ -7,12 +7,7 @@ use Command\Basis\Request\CommandArgv;
 
 class LocalBuild extends Command
 {
-    private string $serialize = 'app:local-build';
-
-    public function getSerialize()
-    {
-        return $this->serialize;
-    }
+    public string $serialize = 'app:local-build';
 
     public function execute(CommandArgv $commandArgv)
     {

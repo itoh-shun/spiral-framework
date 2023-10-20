@@ -9,12 +9,7 @@ use ZipArchive;
 
 class DatabaseSchemaCheck extends Command
 {
-    private string $serialize = 'database:schema';
-
-    public function getSerialize()
-    {
-        return $this->serialize;
-    }
+    public string $serialize = 'database:schema';
     
     protected function defineOptions()
     {
