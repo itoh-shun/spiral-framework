@@ -57,7 +57,7 @@ abstract class Command
                                 $option['value'][] = $commandArgv->options[++$i];
                             }
                         } else {
-                            $option['value'][] = $commandArgv->options[++$i];
+                            $option['value'] = $commandArgv->options[++$i];
                         }
                     } else {
                         $option['value'] = true; // 値を持たないオプションの場合、trueを設定

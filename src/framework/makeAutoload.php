@@ -100,10 +100,11 @@ foreach ($dependencies as $relativeFile  => $classes) {
 $baseDir = getcwd();
 $currentDirName = basename(getcwd());  // 現在のディレクトリ名を取得
 $autoloadFileContent = "<?php \r\n";
+$autoloadFileContent .= "\$pathPrefixInside = defined('BASE_PATH') ? BASE_PATH : '' ;\r\n";
 foreach(array_reverse(topological_sort($newDependencies)) as $file) {
     $relativePath = $currentDirName . '/' . str_replace($baseDir, '', $file);  // ディレクトリ名を付与
     $relativePath = str_replace('//', '/', $relativePath);
-    $autoloadFileContent .= "require_once '{$relativePath}';\r\n";
+    $autoloadFileContent .= "require_once \$pathPrefixInside . '{$relativePath}';\r\n";
 }
 
 file_put_contents('autoload_static.php', $autoloadFileContent);

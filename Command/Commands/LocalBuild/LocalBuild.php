@@ -48,15 +48,10 @@ class LocalBuild extends Command
                 exec("cd $file && php makeAutoload.php && cd -");
             }
         }
-
-        exec("cp -r spiral-framework/src/* .build");
         exec("cp -r spiral-framework/.mock .build");
-        exec("cp -r src/* .build");
-
         $port = $this->getOptionValue('port');
         $dir = $this->getOptionValue('dir');
         $routeFile = $this->getOptionValue('file');
-
         $file = fopen('.build/build.php', 'w');  // ファイルを開くまたは新規作成
         if ($file) {
             fwrite($file, $this->buildFile($routeFile));  // ファイルにデータを書き込む
@@ -65,17 +60,7 @@ class LocalBuild extends Command
             echo "ファイルを開くことができませんでした";
         }
 
-        $filelist = glob(".build/*");
-        foreach ($filelist as $file) {
-            if (file_exists("$file/makeAutoload.php")) {
-                unlink("$file/makeAutoload.php");
-            }
-            if (file_exists("$file/.git")) {
-                $this->rmdir_recursively("$file/.git");
-            }
-        }
-
-        exec("cd .build && php -S localhost:{$port} -t {$dir} build.php");
+        exec("php -S localhost:{$port} .build/build.php");
         return true;
     }
 
@@ -85,6 +70,8 @@ class LocalBuild extends Command
 require_once '.mock/Spiral.php';
 require_once '.mock/PbSpiralApiCommunicator.php';
 require_once '.mock/SpiralApiRequest.php';
+chdir('src');
+define('BASE_PATH','../spiral-framework/src/');
 \$SPIRAL = new Spiral();
 require_once "{$file}";
 EOF;
