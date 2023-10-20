@@ -33,6 +33,8 @@ require_once 'framework/Routing/Router.php';
 require_once 'framework/Facades/GateInterface.php';
 require_once 'framework/Facades/Gate.php';
 require_once 'framework/Facades/GateDefine.php';
+require_once 'framework/Batch/BatchJob.php';
+require_once 'framework/Batch/BatchScheduler.php';
 require_once 'framework/Library/SiDateTime/SiDateTime.php';
 require_once 'framework/Library/SiDateTime/HolidayConfig.php';
 require_once 'framework/Library/BladeLikeEngine/BladeOne.php';
