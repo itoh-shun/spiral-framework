@@ -37,6 +37,8 @@ class Commander {
         foreach($this->commands as $command)
         {
             $this->message($command->getSerialize());
+            $command->displayHelp();
+            $this->message("");
         }
     }
     

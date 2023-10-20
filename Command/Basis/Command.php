@@ -114,4 +114,16 @@ abstract class Command
     {
         return require '.env.php';
     }
+
+    public function displayHelp() {
+        $this->line("=======================================");
+        foreach ($this->options as $option) {
+            $short = $option['short'] ? '-' . $option['short'] : '';
+            $long = '--' . $option['long'];
+            $description = $option['description'];
+            $this->line("{$short}, {$long}: {$description}");
+        }
+        $this->line("=======================================");
+    }
+
 }

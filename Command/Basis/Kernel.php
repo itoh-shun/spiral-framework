@@ -20,15 +20,16 @@ class Kernel
 
     public function handle(CommandArgv $commandArgv)
     {
-        // Check for help options
-        if (in_array('-h', $commandArgv->options) || in_array('--help', $commandArgv->options)) {
-            $this->displayHelp();
-            return;
-        }
-
+        
         $command = $this->commander->dispatch($commandArgv);
         if (is_null($command)) {
             $this->commander->helper();
+            return;
+        }
+
+        // Check for help options
+        if (in_array('-h', $commandArgv->options) || in_array('--help', $commandArgv->options)) {
+            $command->displayHelp();
             return;
         }
 
