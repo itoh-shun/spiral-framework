@@ -1,0 +1,1 @@
+{"version":1,"defects":{"CollectionTest::testWhereMethods":8,"CollectionTest::testFilterRejectFirstLastGetColumn":8},"times":{"CollectionTest::testBasicAccess":0.002,"CollectionTest::testAllToArrayAndCount":0,"CollectionTest::testSumAvgMaxMin":0,"CollectionTest::testWhereMethods":0,"CollectionTest::testFilterRejectFirstLastGetColumn":0}}

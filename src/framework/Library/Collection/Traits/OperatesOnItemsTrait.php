@@ -42,8 +42,8 @@ trait OperatesOnItemsTrait {
      * @return static
      */
     public function where(string $key, $value): Collection {
-        return $this->filter(function ($item) use ($key, $value) {
-            return $item[$key] === $value;
+        return $this->filter(function (Collection $item) use ($key, $value) {
+            return $item->{$key} === $value;
         });
     }
 
@@ -55,8 +55,8 @@ trait OperatesOnItemsTrait {
      * @return static
      */
     public function whereNot(string $key, $value): Collection {
-        return $this->filter(function ($item) use ($key, $value) {
-            return $item[$key] !== $value;
+        return $this->filter(function (Collection $item) use ($key, $value) {
+            return $item->{$key} !== $value;
         });
     }
 
@@ -68,8 +68,8 @@ trait OperatesOnItemsTrait {
      * @return static
      */
     public function whereIn(string $key, array $values): Collection {
-        return $this->filter(function ($item) use ($key, $values) {
-            return in_array($item[$key], $values);
+        return $this->filter(function (Collection $item) use ($key, $values) {
+            return in_array($item->{$key}, $values);
         });
     }
 
@@ -81,8 +81,8 @@ trait OperatesOnItemsTrait {
      * @return static
      */
     public function whereNotIn(string $key, array $values): Collection {
-        return $this->filter(function ($item) use ($key, $values) {
-            return !in_array($item[$key], $values);
+        return $this->filter(function (Collection $item) use ($key, $values) {
+            return !in_array($item->{$key}, $values);
         });
     }
 
@@ -93,8 +93,8 @@ trait OperatesOnItemsTrait {
      * @return static
      */
     public function reject(callable $callback): Collection {
-        return $this->filter(function ($item, $key) use ($callback) {
-            return !$callback($item, $key);
-        });
+        return new static(array_filter($this->items, function($item , $key) use ($callback) {
+            return !$callback($item , $key);
+        }, ARRAY_FILTER_USE_BOTH));
     }
 }

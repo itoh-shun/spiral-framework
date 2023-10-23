@@ -38,21 +38,25 @@ class CollectionTest extends TestCase
             ['id' => 3, 'name' => 'Charlie'],
         ]);
 
-        $this->assertCount(1, $collection->where('name', 'Alice')->toArray());
-        $this->assertCount(2, $collection->whereNot('name', 'Alice')->toArray());
-        $this->assertCount(2, $collection->whereIn('id', [1, 2])->toArray());
-        $this->assertCount(1, $collection->whereNotIn('id', [1, 2])->toArray());
+        $this->assertCount(1, $collection->where('name', 'Alice'));
+        $this->assertCount(2, $collection->whereNot('name', 'Alice'));
+        $this->assertCount(2, $collection->whereIn('id', [1, 2]));
+        $this->assertCount(1, $collection->whereNotIn('id', [1, 2]));
     }
 
     public function testFilterRejectFirstLastGetColumn()
     {
         $collection = new Collection(['a', 'b', 'c', 'd', 'e']);
+        $collection->reject(function ($value) {
+            return $value === 'a' || $value === 'e';
+        });
         $this->assertCount(2, $collection->filter(function ($value) {
             return $value === 'a' || $value === 'e';
-        })->toArray());
+        }));
         $this->assertCount(3, $collection->reject(function ($value) {
+            var_dump($value);
             return $value === 'a' || $value === 'e';
-        })->toArray());
+        }));
         $this->assertEquals('a', $collection->first());
         $this->assertEquals('e', $collection->last());
         $this->assertEquals('c', $collection->get(2));
