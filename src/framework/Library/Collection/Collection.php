@@ -11,9 +11,10 @@ use Collection\Traits\PaginationTrait;
 use Collection\Traits\PropertyAccessTrait;
 use Collection\Traits\SearchTrait;
 use Collection\Traits\TransformationTrait;
+use Countable;
 use IteratorAggregate;
 
-class Collection implements IteratorAggregate{
+class Collection implements IteratorAggregate , Countable {
     use ArrayableTrait, OperatesOnItemsTrait, AggregatesItemsTrait;
     use AggregatesItemsTrait, ComparisonTrait, ManipulationTrait;
     use OperatesOnItemsTrait, PaginationTrait, SearchTrait;
@@ -49,5 +50,15 @@ class Collection implements IteratorAggregate{
      */
     public function getIterator(): ArrayIterator {
         return new ArrayIterator($this->items);
+    }
+    
+    
+    /**
+     * Count elements of the collection.
+     *
+     * @return int
+     */
+    public function count(): int {
+        return count($this->items);
     }
 }
