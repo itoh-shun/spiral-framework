@@ -37,7 +37,7 @@ class CollectionTest extends TestCase
             ['id' => 2, 'name' => 'Bob'],
             ['id' => 3, 'name' => 'Charlie'],
         ]);
-        
+
         $this->assertCount(1, $collection->where('name', 'Alice')->toArray());
         $this->assertCount(2, $collection->whereNot('name', 'Alice')->toArray());
         $this->assertCount(2, $collection->whereIn('id', [1, 2])->toArray());
