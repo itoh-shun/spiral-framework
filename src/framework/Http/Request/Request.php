@@ -195,4 +195,23 @@ class Request
         }
         return http_build_query($query);
     }
+
+    public function updateQueryParameter($key, $value) {
+        // 現在のURLとクエリストリングを取得
+        $url = $_SERVER['REQUEST_URI'];
+        $parsedUrl = parse_url($url);
+        $query = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $query);
+        }
+    
+        // クエリの中の特定のキーの値を書き換え
+        $query[$key] = $value;
+    
+        // 書き換えたクエリをURLに戻す
+        $newQueryStr = http_build_query($query);
+        $newUrl = $parsedUrl['path'] . '?' . $newQueryStr;
+    
+        return $newUrl;
+    }
 }

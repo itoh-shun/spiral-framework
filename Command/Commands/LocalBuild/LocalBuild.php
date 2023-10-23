@@ -67,6 +67,7 @@ require_once '.mock/PbSpiralApiCommunicator.php';
 require_once '.mock/SpiralApiRequest.php';
 chdir('src');
 define('BASE_PATH','../spiral-framework/src/');
+define('IS_LOCAL',true);
 \$SPIRAL = new Spiral();
 require_once "{$file}";
 EOF;
