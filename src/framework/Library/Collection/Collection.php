@@ -1,6 +1,7 @@
 <?php
 namespace Collection;
 
+use ArrayIterator;
 use Collection\Traits\AggregatesItemsTrait;
 use Collection\Traits\ArrayableTrait;
 use Collection\Traits\ComparisonTrait;
@@ -10,8 +11,9 @@ use Collection\Traits\PaginationTrait;
 use Collection\Traits\PropertyAccessTrait;
 use Collection\Traits\SearchTrait;
 use Collection\Traits\TransformationTrait;
+use IteratorAggregate;
 
-class Collection {
+class Collection implements IteratorAggregate{
     use ArrayableTrait, OperatesOnItemsTrait, AggregatesItemsTrait;
     use AggregatesItemsTrait, ComparisonTrait, ManipulationTrait;
     use OperatesOnItemsTrait, PaginationTrait, SearchTrait;
@@ -38,5 +40,14 @@ class Collection {
                 $this->items[$key] = new self($value);
             }
         }
+    }
+
+    /**
+     * Retrieve an external iterator.
+     *
+     * @return ArrayIterator
+     */
+    public function getIterator(): ArrayIterator {
+        return new ArrayIterator($this->items);
     }
 }
