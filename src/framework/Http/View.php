@@ -4,7 +4,7 @@
 
 namespace framework\Http;
 
-use Collection;
+use Collection\Collection;
 use stdClass;
 
 class View
@@ -50,7 +50,7 @@ class View
             return $this->data;
         }
 
-        return $this->data->$key ? $this->data[$key] : $default;
+        return $this->data[$key] ? $this->data[$key] : $default;
     }
 
     public function set(

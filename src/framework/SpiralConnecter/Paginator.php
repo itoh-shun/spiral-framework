@@ -2,12 +2,13 @@
 
 namespace framework\SpiralConnecter;
 
-use Collection;
+use Collection\Collection;
 use framework\Http\Request;
 use stdClass;
 
 class Paginator extends stdClass
 {
+    private Collection $data ;
     private int $currentPage = 1;
     private int $from = 1;
     private int $lastPage = 0;
@@ -40,7 +41,7 @@ class Paginator extends stdClass
 
     public function getData()
     {
-        return $this->data;
+        return $this->data->all();
     }
 
     public function getCurrentPage()

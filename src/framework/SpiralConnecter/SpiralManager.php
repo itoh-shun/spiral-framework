@@ -2,7 +2,7 @@
 
 namespace framework\SpiralConnecter;
 
-use Collection;
+use Collection\Collection;
 use framework\Exception\NotFoundException;
 use HttpRequestParameter;
 use LogicException;
@@ -711,7 +711,7 @@ class SpiralManager
         $db = SpiralDB::title($this->request->get('db_title'))
             ->orderBy('id', 'desc')
             ->paginate(1);
-        return $db->getData()->{0}->id + 1;
+        return $db->getData()[0]->id + 1;
     }
 }
 

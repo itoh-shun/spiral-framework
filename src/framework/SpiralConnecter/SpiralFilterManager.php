@@ -4,7 +4,7 @@ namespace framework\SpiralConnecter;
 
 use App\Model\Lot;
 use Collator;
-use Collection;
+use Collection\Collection;
 use framework\Exception\NotFoundException;
 use HttpRequestParameter;
 use LogicException;

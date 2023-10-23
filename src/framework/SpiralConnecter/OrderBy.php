@@ -2,7 +2,7 @@
 
 namespace framework\SpiralConnecter;
 
-use Collection;
+use Collection\Collection;
 use LogicException;
 
 class OrderBy

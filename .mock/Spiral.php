@@ -17,7 +17,7 @@ class Spiral{
     public function getCache(int $_timeout = 900){
         return new class {
             public $data = [];
-            function decr($key,int $val){
+            function decr($key,int $val = 1){
                 $this->data[$key] = $this->data[$key] -= $val;
             }
             function delete($key){
@@ -29,7 +29,7 @@ class Spiral{
             function get($key){
                 return $this->data[$key];
             }
-            function incr($key,int $val){
+            function incr($key,int $val = 1){
                 if(is_int($this->data[$key])){
                     $this->data[$key] = $this->data[$key] += $val;
                 };
