@@ -64,7 +64,6 @@ class LocalBuild extends Command
 <?php
 require_once '.mock/Spiral.php';
 require_once '.mock/PbSpiralApiCommunicator.php';
-require_once '.mock/SpiralApiRequest.php';
 chdir('src');
 define('BASE_PATH','../spiral-framework/src/');
 define('IS_LOCAL',true);

@@ -51,8 +51,8 @@ class Route
     ): bool {
         if (
             $isMethodCheck &&
-            mb_strtolower($request->getMethod()) !==
-                mb_strtolower($this->method)
+            \mb_strtolower($request->getMethod()) !==
+            \mb_strtolower($this->method)
         ) {
             return false;
         }

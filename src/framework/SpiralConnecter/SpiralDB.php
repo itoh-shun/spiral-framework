@@ -105,18 +105,14 @@ namespace framework\SpiralConnecter {
         {
             $instance = new static();
             $data = $instance->getManager()->where($instance->primaryKey, $value)->get();  // ここを修正
-
             if ($data->first()) {
                 // データベースから取得したデータを使用して新しいインスタンスを作成
                 $modelInstance = new static();
 
                 // 新しいインスタンスの各プロパティにデータを設定
                 foreach ($data->first() as $key => $value) {
-                    if (property_exists($modelInstance, $key)) {
-                        $modelInstance->$key = $value;
-                    }
+                    $modelInstance->$key = $value;
                 }
-
                 return $modelInstance;
             }
 
@@ -138,9 +134,7 @@ namespace framework\SpiralConnecter {
 
                     // 新しいインスタンスの各プロパティにデータを設定
                     foreach ($d as $key => $value) {
-                        if (property_exists($modelInstance, $key)) {
-                            $modelInstance->$key = $value;
-                        }
+                        $modelInstance->$key = $value;
                     }
 
                     $models[] = $modelInstance;
@@ -170,8 +164,8 @@ namespace framework\SpiralConnecter {
             } else {
                 // 主キーの値が存在しない場合、新規挿入のみを行う
                 unset($data[$this->primaryKey]);
-                $id = $this->getManager()->create($data);
-                $this->id = (int) $id;
+                $data = $this->getManager()->create($data);
+                $this->id = (int) $data->id;
             }
         }
 
