@@ -1,8 +1,7 @@
 <?php
 echo '
 <?php
-$pathPrefix = defined(\'BASE_PATH\') ? BASE_PATH : "";
-require_once $pathPrefix . "framework/autoload_static.php";
+require_once (defined(\'BASE_PATH\') ? BASE_PATH : "") . "framework/autoload_static.php";
 require_once "'.$projectName.'/autoload_static.php";
 
 use framework\Routing\Router;
@@ -31,7 +30,7 @@ const VIEW_FILE_ROOT = "";
 $router = new Router();
 //$router->middleware();毎回必ずチェックする場合はこっち
 $app = new '.$projectName.'\\'.$projectName.'Application();
-$exceptionHandler = new '.$projectName.'\Exceptions\ExceptionHandler();
+$exceptionHandler = new '.$projectName.'\App\Exceptions\ExceptionHandler();
 $kernel = new \framework\Http\Kernel($app, $router ,$exceptionHandler);
 $request = new \framework\Http\Request();
 
