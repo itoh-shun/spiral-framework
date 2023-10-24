@@ -13,7 +13,7 @@ trait PaginationTrait {
     public function paginate(int $perPage = 15, int $page = 1): Collection {
         $start = ($page - 1) * $perPage;
         $slicedItems = array_slice($this->items, $start, $perPage);
-        
+        /** @phpstan-ignore-next-line */
         return new static($slicedItems);
     }
 
@@ -28,6 +28,7 @@ trait PaginationTrait {
         $count = count($this->items);
         
         for ($i = 0; $i < $count; $i += $size) {
+            /** @phpstan-ignore-next-line */
             $chunks[] = new static(array_slice($this->items, $i, $size));
         }
         

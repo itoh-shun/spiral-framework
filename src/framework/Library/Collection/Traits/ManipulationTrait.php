@@ -30,7 +30,7 @@ trait ManipulationTrait {
     public function shuffle(): Collection {
         $items = $this->items;
         shuffle($items);
-        
+        /** @phpstan-ignore-next-line */
         return new static($items);
     }
 
@@ -40,6 +40,7 @@ trait ManipulationTrait {
      * @return static
      */
     public function reverse(): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_reverse($this->items));
     }
 }

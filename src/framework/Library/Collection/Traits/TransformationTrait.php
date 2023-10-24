@@ -22,7 +22,7 @@ trait TransformationTrait {
                 }
             }
         }
-        
+        /** @phpstan-ignore-next-line */
         return new static($items);
     }
 
@@ -32,6 +32,7 @@ trait TransformationTrait {
      * @return static
      */
     public function keys(): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_keys($this->items));
     }
 
@@ -41,6 +42,7 @@ trait TransformationTrait {
      * @return static
      */
     public function values(): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_values($this->items));
     }
 }

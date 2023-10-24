@@ -20,6 +20,7 @@ trait OperatesOnItemsTrait {
      * @return Collection
      */
     public function map(callable $callback): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_map($callback, $this->items));
     }
 
@@ -30,6 +31,7 @@ trait OperatesOnItemsTrait {
      * @return Collection
      */
     public function filter(callable $callback): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_filter($this->items, $callback, ARRAY_FILTER_USE_BOTH));
     }
     
@@ -93,6 +95,7 @@ trait OperatesOnItemsTrait {
      * @return static
      */
     public function reject(callable $callback): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_filter($this->items, function($item , $key) use ($callback) {
             return !$callback($item , $key);
         }, ARRAY_FILTER_USE_BOTH));

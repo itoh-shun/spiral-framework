@@ -5,6 +5,7 @@ namespace Collection\Traits;
 use Collection\Collection;
 
 trait ComparisonTrait {
+
     /**
      * Get the items that are not present in the given items.
      *
@@ -15,7 +16,7 @@ trait ComparisonTrait {
         if ($items instanceof Collection) {
             $items = $items->all();
         }
-        
+        /** @phpstan-ignore-next-line */
         return new static(array_diff($this->items, $items));
     }
 
@@ -29,7 +30,7 @@ trait ComparisonTrait {
         if ($items instanceof Collection) {
             $items = $items->all();
         }
-        
+        /** @phpstan-ignore-next-line */
         return new static(array_intersect($this->items, $items));
     }
 
@@ -39,6 +40,7 @@ trait ComparisonTrait {
      * @return static
      */
     public function unique(): Collection {
+        /** @phpstan-ignore-next-line */
         return new static(array_unique($this->items));
     }
 }

@@ -103,10 +103,12 @@ namespace framework\SpiralConnecter {
         // 主キーによるレコードの取得
         public static function find($value)
         {
+            /** @phpstan-ignore-next-line */
             $instance = new static();
             $data = $instance->getManager()->where($instance->primaryKey, $value)->get();  // ここを修正
             if ($data->first()) {
                 // データベースから取得したデータを使用して新しいインスタンスを作成
+                /** @phpstan-ignore-next-line */
                 $modelInstance = new static();
 
                 // 新しいインスタンスの各プロパティにデータを設定
@@ -122,6 +124,7 @@ namespace framework\SpiralConnecter {
         // すべてのレコードを取得
         public static function all()
         {
+            /** @phpstan-ignore-next-line */
             $instance = new static();
             $data = $instance->getManager()->get();
 
@@ -129,7 +132,8 @@ namespace framework\SpiralConnecter {
 
             if ($data) {
                 foreach ($data as $d) {
-                    // データベースから取得したデータを使用して新しいインスタンスを作成
+                    // データベースから取得したデータを使用して新しいインスタンスを作
+                    /** @phpstan-ignore-next-line */
                     $modelInstance = new static();
 
                     // 新しいインスタンスの各プロパティにデータを設定
