@@ -57,13 +57,16 @@ usort($files, function ($a, $b) {
 $dependencies = [];
 
 foreach ($files as $file) {
-    if (strpos($file, "./resources") === 0) {
+    if (strpos($file, \'./resources\') === 0) {
         continue;
     }
-    if($file === "./makeAutoload.php") {
+    if (strpos($file, \'./routes\') === 0) {
         continue;
     }
-    if($file === "./autoload_static.php") {
+    if($file === \'./makeAutoload.php\'){        
+        continue;
+    }
+    if($file === \'./autoload_static.php\'){
         continue;
     }
     $fileContent = file_get_contents($file);
