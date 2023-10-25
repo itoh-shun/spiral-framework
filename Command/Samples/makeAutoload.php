@@ -23,52 +23,93 @@ function topological_sort_visit($node, $graph, &$visited, &$result): void
     }
 }
 
+function extractClassesFromStatement($pattern, $fileContent) {
+    preg_match_all($pattern, $fileContent, $matches);
+    $allImports = [];
+    foreach ($matches[1] as $match) {
+        $imports = array_map(\'trim\', explode(\',\', $match));
+        $allImports = array_merge($allImports, $imports);
+    }
+    return $allImports;
+}
+
+
 $classToFileMap = require_once \'../../vendor/composer/autoload_classmap.php\';
-$classToFileMap = array_filter($classToFileMap, function($path) {
+$classToFileMap = array_filter($classToFileMap, function ($path) {
     return strpos($path, getcwd()) !== false;
 });
+$classToFileMapFiles = array_values($classToFileMap);
+
 $directory = new RecursiveDirectoryIterator(\'./\');
 $iterator = new RecursiveIteratorIterator($directory);
 $regex = new RegexIterator($iterator, \'/^.+\.php$/i\', RecursiveRegexIterator::GET_MATCH);
 
+// ディレクトリから取得されるファイルのリスト
+$files = [];
+foreach ($regex as $file) {
+    $files[] = $file[0];
+}
+
+usort($files, function ($a, $b) {
+    return strcmp($a, $b);
+});
+
 $dependencies = [];
 
-foreach ($regex as $file) {
-    if (strpos($file[0], \'./resources\') === 0) {
+foreach ($files as $file) {
+    if (strpos($file, "./resources") === 0) {
         continue;
     }
-    if (strpos($file[0], \'./routes\') === 0) {
+    if($file === "./makeAutoload.php") {
         continue;
     }
-    if($file[0] === \'./makeAutoload.php\'){        
+    if($file === "./autoload_static.php") {
         continue;
     }
-    if($file[0] === \'./autoload_static.php\'){
-        continue;
-    }
-    $fileContent = file_get_contents($file[0]);
+    $fileContent = file_get_contents($file);
+    $fileContent = preg_replace(\'!/\*.*?\*/!s\', "", $fileContent); // マルチラインのコメントを削除
+    $fileContent = preg_replace(\'!//.*?$!m\', "", $fileContent);    // シングルラインのコメントを削除
+    
     // namespace の解析
-    preg_match(\'/\bnamespace\s+([^;]+);/\', $fileContent, $namespaceMatch);
-    $namespace = $namespaceMatch[1] ?? \'\';
-    // use, extends, trait の use ステートメントの解析
-    preg_match_all(\'/\buse\s+([^;]+);/\', $fileContent, $matches);
-    preg_match_all(\'/\bextends\s+([^\s;]+)/\', $fileContent, $extendsMatches);
-    preg_match_all(\'/\buse\s+([^;]+)(?=;)/\', $fileContent, $traitMatches);
-    $allMatches = array_merge($matches[1], $extendsMatches[1], $traitMatches[1]);
-    if (empty($namespace) && empty($allMatches)) {
-        $dependencies[$file[0]] = [];
+    if(preg_match(\'/\bnamespace\s+([^{\s]+)\s*{?/\', $fileContent, $namespaceMatch)) {
+        $namespace = $namespaceMatch[1];
     } else {
-        $dependencies[$file[0]] = $allMatches;  // 元の依存関係を保持
+        $namespace = "";
+    }
+    // use ステートメントの解析
+    $useMatches = extractClassesFromStatement(\'/\buse\s+([^(;]+);/\', $fileContent);
+
+    // extends ステートメントの解析
+    $extendsMatches = extractClassesFromStatement(\'/\bextends\s+([^\s;]+)/\', $fileContent);
+
+    // trait の use ステートメントの解析
+    //$traitMatches = extractClassesFromStatement(\'/\buse\s+([^(;]+);/\', $fileContent);
+
+    // プロパティの型の解析
+    $propertyTypeMatches = extractClassesFromStatement(\'/(?:private|protected|public)\s+(?:static\s+)?\??([^\s$]+)\s+\$[^\s;]+/\', $fileContent);
+
+    $methodArgTypeMatches = extractClassesFromStatement(\'/\s*\??([a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)(?:\[\])?\s*\$/\', $fileContent);
+
+    $implementsMatches = extractClassesFromStatement(\'/\bimplements\s+([^{\s]+)(?:,\s*[^{\s]+)*/\', $fileContent);
+
+    $allMatches = array_merge($useMatches, $extendsMatches, $propertyTypeMatches, $methodArgTypeMatches, $implementsMatches);
+    
+    if (empty($namespace) && empty($allMatches)) {
+        $dependencies[$file] = [];
+    } else {
+        $dependencies[$file] = $allMatches;  // 元の依存関係を保持
         foreach ($allMatches as $class) {
             // 名前空間が指定されていない場合、ファイルの名前空間を付与する
             if ($namespace && strpos($class, "\\\") !== 0) {
-                $dependencies[$file[0]][] = $namespace . "\\\" . $class;  // 名前空間を付与した依存関係を追加
+                // セミコロンを取り除いた名前空間を使用して結合
+                $combinedNamespace = rtrim($namespace, \';\') . "\\\" . $class;
+                $dependencies[$file][] = $combinedNamespace;  // 名前空間を付与した依存関係を追加
             }
         }
     }
 }
 
-function resolveDependencies($file, $dependencies, &$resolved, &$seen): void 
+function resolveDependencies($file, $dependencies, &$resolved, &$seen): void
 {
     $seen[$file] = true;
     foreach ($dependencies[$file] as $dependency) {
@@ -93,21 +134,22 @@ foreach ($dependencies as $relativeFile  => $classes) {
     $file = realpath($relativeFile);
     //$class = array_search($file, $classToFileMap);
     //if ($class !== false) {
-        $newDependencies[$file] = [];
-        foreach ($classes as $depClass) {
-            if (array_key_exists($depClass, $classToFileMap)) {
-                $newDependencies[$file][] = $classToFileMap[$depClass];
-            }
+    $newDependencies[$file] = [];
+    foreach ($classes as $depClass) {
+        if (array_key_exists($depClass, $classToFileMap)) {
+            $newDependencies[$file][] = $classToFileMap[$depClass];
         }
+    }
     //}
 }
+
 $baseDir = getcwd();
 $currentDirName = basename(getcwd());  // 現在のディレクトリ名を取得
 $autoloadFileContent = "<?php \r\n";
-foreach(array_reverse(topological_sort($newDependencies)) as $file){
+foreach(array_reverse(topological_sort($newDependencies)) as $file) {
     $relativePath = $currentDirName . \'/\' . str_replace($baseDir, \'\', $file);  // ディレクトリ名を付与
     $relativePath = str_replace(\'//\', \'/\', $relativePath);
-    $autoloadFileContent .= "require_once \'$relativePath\';\r\n";
+    $autoloadFileContent .= "require_once \'{$relativePath}\';\r\n";
 }
 
 file_put_contents(\'autoload_static.php\', $autoloadFileContent);

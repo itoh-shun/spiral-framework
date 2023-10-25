@@ -3,6 +3,7 @@
 namespace Command\Commands;
 
 use Command\Basis\Command;
+use Command\Basis\Core\View;
 use Command\Basis\Request\CommandArgv;
 use Exception;
 use ZipArchive;
@@ -161,6 +162,8 @@ class ApplicationDeploy extends Command
         $filelist = glob("src/*");
         foreach ($filelist as $file) {
             if (file_exists("$file/makeAutoload.php")) {
+                $text = View::forge('spiral-framework/Command/Samples/makeAutoload');
+                file_put_contents("$file/makeAutoload.php", $text->render());
                 exec("cd $file && php makeAutoload.php && cd -");
             }
         }
