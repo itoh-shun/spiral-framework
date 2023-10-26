@@ -5,36 +5,44 @@ namespace Command\Commands;
 use Command\Basis\Command;
 use Command\Basis\Core\View;
 use Command\Basis\Request\CommandArgv;
-use Exception;
-use ZipArchive;
+use Command\Basis\Request\CurlClient;
 
 class ApplicationDeploy extends Command
 {
     public string $serialize = 'app:deploy';
 
+    // Move hardcoded values to class constants
+    const API_LOCATOR_URL = 'https://www.pi-pe.co.jp/api/locator';
+    const MULTIPART_BOUNDARY = 'SPIRAL_API_MULTIPART_BOUNDARY';
+
+    private $curlClient;
+    public function __construct()
+    {
+        $this->curlClient = new CurlClient();
+    }
     protected function defineOptions()
     {
-        $this->addOption('s', 'skip', '指定するとGitの差分を反映します。' , false);
+        $this->addOption('s', 'skip', '指定するとGitの差分を反映します。', false);
     }
 
     public function execute(CommandArgv $commandArgv)
     {
-        //ApplicationInitalizeInputData();
         $this->line('Welcome Spiral Frame !!!!');
-        /*
-        $bool = $this->ask("Reflects everything under the src directory. [yes , no] : " , false);
-        if($bool !== "yes" && $bool !== 'y')
-        {
-            $this->line('Cancelled.');
-            return null;
-        }
-        */
-        $environments = $this->config();
 
+        $environments = $this->config();
+        $environment = $this->askForEnvironment($environments);
+        if (!$environment) return;
+
+        $response = $this->createZip($environment);
+        $this->deploy($response['filename'], $environments['deploy'][$environment]);
+    }
+
+    private function askForEnvironment($environments)
+    {
         $environment = $this->ask(
             'Please select the environment you wish to reflect. [' .
-                implode(',', array_keys($environments['deploy'])) .
-                '] : ',
+            implode(',', array_keys($environments['deploy'])) .
+            '] : ',
             false
         );
 
@@ -43,20 +51,15 @@ class ApplicationDeploy extends Command
             return null;
         }
 
-        $response = $this->createZip($environment);
-        $this->deploy(
-            $response['filename'],
-            $environments['deploy'][$environment]
-        );
+        return $environment;
     }
 
     private function deploy($filename, $config)
     {
-        $MULTIPART_BOUNDARY = 'SPIRAL_API_MULTIPART_BOUNDARY';
+        // Use constants instead of hardcoded values
         $API_TOKEN = $config['token'];
         $API_SECRET = $config['secret'];
 
-        $locator = 'https://www.pi-pe.co.jp/api/locator';
         $api_headers = [
             'X-SPIRAL-API: locator/apiserver/request',
             'Content-Type: application/json; charset=UTF-8',
@@ -64,20 +67,15 @@ class ApplicationDeploy extends Command
         $parameters = [];
         $parameters['spiral_api_token'] = $API_TOKEN;
         $json = json_encode($parameters);
-        $curl = curl_init($locator);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $api_headers);
 
-        curl_exec($curl);
-        if (curl_errno($curl)) {
-            echo curl_error($curl);
+        try {
+            $response = $this->curlClient->post(self::API_LOCATOR_URL, $json, $api_headers);
+            $response = json_decode($response, true);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
             exit(1);
         }
-        $response = curl_multi_getcontent($curl);
-        curl_close($curl);
-        $response = json_decode($response, true);
+
         if ($response['code'] != 0) {
             var_dump($response);
             exit(1);
@@ -89,7 +87,7 @@ class ApplicationDeploy extends Command
         $api_headers = [
             'X-SPIRAL-API: custom_module/upload/request',
             "Content-Type: multipart/form-data; boundary=\"" .
-            $MULTIPART_BOUNDARY .
+            $this::MULTIPART_BOUNDARY .
             "\"",
         ];
         $parameters = [];
@@ -100,31 +98,28 @@ class ApplicationDeploy extends Command
         $key = $parameters['spiral_api_token'] . '&' . $parameters['passkey'];
         $parameters['signature'] = hash_hmac('sha1', $key, $API_SECRET, false);
 
-        $postdata = '--' . $MULTIPART_BOUNDARY . "\r\n";
+        $postdata = '--' . $this::MULTIPART_BOUNDARY . "\r\n";
         $postdata .= "Content-Type: application/json; charset=\"UTF-8\";\r\n";
         $postdata .= "Content-Disposition: form-data; name=\"json\"\r\n\r\n";
         $postdata .= json_encode($parameters);
         $postdata .= "\r\n\r\n";
 
-        $postdata .= '--' . $MULTIPART_BOUNDARY . "\r\n";
+        $postdata .= '--' . $this::MULTIPART_BOUNDARY . "\r\n";
         $postdata .= "Content-Type: application/x-httpd-php;\r\n";
         $postdata .= "Content-Disposition: form-data; name=\"src\"; filename=\"$filename\"\r\n\r\n";
         $postdata .= $filedata;
         $postdata .= "\r\n\r\n";
-        $postdata .= '--' . $MULTIPART_BOUNDARY . "--\r\n";
+        $postdata .= '--' . $this::MULTIPART_BOUNDARY . "--\r\n";
         $postdata .= "\r\n";
-        // curl�饤�֥���Ȥä��������ޤ���
-        $curl = curl_init($API_URL);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $api_headers);
+        
 
-        curl_exec($curl);
-        $response = curl_multi_getcontent($curl);
-        curl_close($curl);
-
-        $response = json_decode($response, true);
+        try {
+            $response = $this->curlClient->post($API_URL, $postdata, $api_headers);
+            $response = json_decode($response, true);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit(1);
+        }
 
         if ($response['code'] != 0) {
             var_dump($response);
@@ -133,23 +128,56 @@ class ApplicationDeploy extends Command
 
         return true;
     }
-
     private function createZip($environment)
     {
-        $skip = $this->getOptionValue('skip');
+        $this->prepareDirectories($environment);
+        $this->updateAutoload();
+        $this->handleGitOperations($environment);
+        $this->createZipArchive($environment);
+    
+        return ['filename' => ".tmp/$environment.zip"];
+    }
+    
+    private function prepareDirectories($environment)
+    {
         if (file_exists('.tmp')) {
             exec('rm -rf .tmp');
         }
-
+    
         mkdir('.tmp');
-
+    
         if (!file_exists(".tmp/$environment")) {
             mkdir(".tmp/$environment");
         }
         if (file_exists(".tmp/$environment.zip")) {
             exec("rm -rf .tmp/$environment.zip");
         }
-
+    }
+    
+    private function updateAutoload()
+    {
+        exec('composer dump-autoload');
+        
+        $srcFileList = glob("src/*");
+        foreach ($srcFileList as $file) {
+            if (file_exists("$file/makeAutoload.php")) {
+                $text = View::forge('spiral-framework/Command/Samples/makeAutoload');
+                file_put_contents("$file/makeAutoload.php", $text->render());
+                exec("cd $file && php makeAutoload.php && cd -");
+            }
+        }
+        
+        $spiralFileList = glob("spiral-framework/src/*");
+        foreach ($spiralFileList as $file) {
+            if (file_exists("$file/makeAutoload.php")) {
+                exec("cd $file && php makeAutoload.php && cd -");
+            }
+        }
+    }
+    
+    private function handleGitOperations($environment)
+    {
+        $skip = $this->getOptionValue('skip');
         $isGit = 'yes';
         if (!$skip) {
             $isGit = $this->ask(
@@ -157,23 +185,7 @@ class ApplicationDeploy extends Command
                 false
             );
         }
-        
-        exec('composer dump-autoload');
-        $filelist = glob("src/*");
-        foreach ($filelist as $file) {
-            if (file_exists("$file/makeAutoload.php")) {
-                $text = View::forge('spiral-framework/Command/Samples/makeAutoload');
-                file_put_contents("$file/makeAutoload.php", $text->render());
-                exec("cd $file && php makeAutoload.php && cd -");
-            }
-        }
-        $filelist = glob("spiral-framework/src/*");
-        foreach ($filelist as $file) {
-            if (file_exists("$file/makeAutoload.php")) {
-                exec("cd $file && php makeAutoload.php && cd -");
-            }
-        }
-
+    
         if ($isGit === 'yes') {
             $commitId = '';
             if (!$skip) {
@@ -186,24 +198,24 @@ class ApplicationDeploy extends Command
                     "git add -N .; git diff --name-only --relative=src/ $commitId",
                     $output
                 );
-
+    
                 $this->line($output);
-
+    
                 $isDeploy = $this->ask(
                     'これらのファイルがデプロイされます。よろしいですか？ [yes or no]: ',
                     false
                 );
-
+    
                 if ($isDeploy !== 'yes') {
                     $this->line('中止します');
                     exit();
                 }
             }
-            
+    
             exec(
                 "git add -N .; git diff --name-only --relative=src/ $commitId | xargs -I % cp -r --parents ./src/% .tmp/$environment > /dev/null 2>&1"
             );
-            
+    
             if (file_exists(".tmp/$environment/src")) {
                 exec("mv .tmp/$environment/src/* .tmp/$environment");
                 $this->rmdir_recursively(".tmp/$environment/src");
@@ -211,9 +223,10 @@ class ApplicationDeploy extends Command
         } else {
             exec("cp -r src/* .tmp/$environment");
         }
-        
-        exec("cp -r spiral-framework/src/* .tmp/$environment");
-
+    }
+    
+    private function createZipArchive($environment)
+    {
         $filelist = glob(".tmp/$environment/*");
         foreach ($filelist as $file) {
             if (file_exists("$file/makeAutoload.php")) {
@@ -223,10 +236,8 @@ class ApplicationDeploy extends Command
                 $this->rmdir_recursively("$file/.git");
             }
         }
-
+    
         exec("cd .tmp/$environment ; zip -r ../$environment.zip * ; cd -");
-
-        return ['filename' => ".tmp/$environment.zip"];
     }
 
     private function rmdir_recursively($dir)
