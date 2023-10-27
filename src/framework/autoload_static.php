@@ -35,6 +35,7 @@ require_once $pathPrefixInside . 'framework/Core/Func.php';
 require_once $pathPrefixInside . 'framework/Core/Logger.php';
 require_once $pathPrefixInside . 'framework/Exception/DependencyResolveFailedException.php';
 require_once $pathPrefixInside . 'framework/Exception/ExceptionHandler.php';
+require_once $pathPrefixInside . 'framework/Exception/RouteValidateException.php';
 require_once $pathPrefixInside . 'framework/Facades/GateDefine.php';
 require_once $pathPrefixInside . 'framework/Http/Middleware/MiddlewareInterface.php';
 require_once $pathPrefixInside . 'framework/Http/Controller/Controller.php';

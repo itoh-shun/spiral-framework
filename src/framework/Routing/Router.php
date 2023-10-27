@@ -58,6 +58,16 @@ class Router
         return $route->middleware(self::$groupMiddlewares);
     }
 
+    public function url(string $routeName, array $params = []): string {
+        foreach ($this->routes as $route) {
+            if ($route->equalAlias($routeName)) {
+                // ルート名が一致するルートを見つけたら、URLを生成して返す
+                return $route->generatePath($params);
+            }
+        }
+        throw new Exception("Route with the name {$routeName} not found.");
+    }
+
     final public static function fetchAlias(string $alias, array $vars = [])
     {
         foreach (self::$routes as $route) {
@@ -95,6 +105,35 @@ class Router
         $request->setRequestUri($uri);
         $router = new Router();
         return $router->dispatch($request, false);
+    }
+
+    public static function metaRedirect($uri, $paramsToKeep = [])
+    {
+        // 現在のURLからクエリパラメータを取得
+        $currentParams = $_GET;
+
+        // 引き継ぐべきパラメータを保持するための配列
+        $paramsToInclude = [];
+
+        // 特定のパラメータのみを新しいURLに含める
+        foreach ($paramsToKeep as $param) {
+            if (isset($currentParams[$param])) {
+                $paramsToInclude[$param] = $currentParams[$param];
+            }
+        }
+
+        // _path パラメータを新しいパスで更新
+        $paramsToInclude['_path'] = $uri;
+
+        // クエリ文字列を生成
+        $queryString = http_build_query($paramsToInclude);
+
+        // 新しいURLを生成
+        $url = '/?' . $queryString;
+
+        // リダイレクト実行
+        echo "<meta http-equiv='refresh' content='0;url={$url}'>";
+        exit;
     }
 
     public static function abort(int $code, string $message = '')
