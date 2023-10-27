@@ -54,6 +54,10 @@ class Request
         self::$pathkey = $pathkey;
     }
 
+    public static function getPathKey(): string
+    {
+        return self::$pathkey;
+    }
     public function getRequestUri(): string
     {
         //return $_SERVER['REQUEST_URI'];

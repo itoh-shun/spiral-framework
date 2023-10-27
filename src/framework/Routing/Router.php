@@ -107,10 +107,11 @@ class Router
         return $router->dispatch($request, false);
     }
 
-    public static function metaRedirect($uri, $paramsToKeep = [])
+    public static function metaRedirect($path, Request $request , $paramsToKeep = [])
     {
+        $baseUrl = strtok($_SERVER['REQUEST_URI'], '?');
         // 現在のURLからクエリパラメータを取得
-        $currentParams = $_GET;
+        $currentParams = $request->all();
 
         // 引き継ぐべきパラメータを保持するための配列
         $paramsToInclude = [];
@@ -123,13 +124,13 @@ class Router
         }
 
         // _path パラメータを新しいパスで更新
-        $paramsToInclude['_path'] = $uri;
+        $paramsToInclude[$request::getPathKey()] = $path;
 
         // クエリ文字列を生成
         $queryString = http_build_query($paramsToInclude);
 
         // 新しいURLを生成
-        $url = '/?' . $queryString;
+        $url = $baseUrl . '?' . $queryString;
 
         // リダイレクト実行
         echo "<meta http-equiv='refresh' content='0;url={$url}'>";
