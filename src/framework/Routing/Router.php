@@ -152,4 +152,14 @@ class Router
 
         throw new Exception($message, $code);
     }
+
+    public static function resource(string $resource, string $controller): void {
+        self::map('GET', "/{$resource}", [$controller , 'index']);
+        self::map('GET', "/{$resource}/create", [$controller , 'create']);
+        self::map('POST', "/{$resource}", [$controller , 'store']);
+        self::map('GET', "/{$resource}/:id", [$controller , 'show']);
+        self::map('GET', "/{$resource}/:id/edit", [$controller , 'edit']);
+        self::map('PUT', "/{$resource}/:id", [$controller , 'update']);
+        self::map('DELETE', "/{$resource}/:id", [$controller , 'destroy']);
+    }
 }
