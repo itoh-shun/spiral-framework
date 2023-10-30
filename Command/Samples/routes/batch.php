@@ -7,8 +7,6 @@ require_once "'.$projectName.'/autoload_static.php";
 
 /** components */
 use framework\Batch\BatchScheduler;
-use JoyPla\Batch\PayoutCorrection;
-use JoyPla\Batch\ReservationPriceBatch;
 
 $batchScheduler = new BatchScheduler();
 
