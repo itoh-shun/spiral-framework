@@ -3,12 +3,15 @@
 namespace framework\Routing;
 
 use Closure;
+use Exception;
 use framework\Exception\ClassNotFoundException;
 use framework\Exception\NotFoundException;
+use framework\Exception\RouteValidateException;
 use framework\Http\Middleware\MiddlewareTrait;
 use framework\Http\Request;
 use framework\Http\Response;
 use framework\Support\ServiceProvider;
+use SiValidator2\SiValidator2;
 
 /**
  * Class Route
@@ -25,6 +28,12 @@ class Route
     private string $action;
     private string $alias = '';
     public array $service = [];
+
+    // パラメーターの制約を保持するためのプロパティ
+    private array $constraints = [];
+
+    // バリデーションルールを保持するためのプロパティ
+    private array $validationRules = [];
     /**
      * Route constructor.
      *
@@ -32,7 +41,6 @@ class Route
      * @param string             $pass
      * @param array|Closure   $handler
      */
-
     public function __construct(string $method, string $pass, $handler)
     {
         $this->method = $method;
@@ -51,8 +59,8 @@ class Route
     ): bool {
         if (
             $isMethodCheck &&
-            mb_strtolower($request->getMethod()) !==
-                mb_strtolower($this->method)
+            \mb_strtolower($request->getMethod()) !==
+            \mb_strtolower($this->method)
         ) {
             return false;
         }
@@ -75,7 +83,27 @@ class Route
 
     final public function process(Request $request, $service, ServiceProvider $serviceProvider)
     {
+        // SiValidator2でバリデーションを実行
+        $validator = SiValidator2::make($request->all(), $this->validationRules);
+
+        // バリデーションエラーがある場合は、エラーメッセージを含むレスポンスを返す
+        if ($validator->isError()) {
+            throw new RouteValidateException(json_encode($validator->toArray()), 400);
+        }
+
         $vars = [];
+
+        foreach ($this->createTokens($request) as $key => $value) {
+            if ($this->startsWith($key, ':')) {
+                $paramName = substr($key, 1);
+                if (isset($this->constraints[$paramName]) && 
+                    !preg_match('/' . $this->constraints[$paramName] . '/', $value)) {
+                    // 制約に合致しない場合は例外を投げる
+                    throw new Exception("Parameter {$paramName} does not match the constraint.");
+                }
+                $vars[$paramName] = $value;
+            }
+        }
 
         foreach (
             $this->createTokens($request)
@@ -186,5 +214,27 @@ class Route
         }
 
         return implode('/', $path);
+    }
+
+    /**
+     * パラメーターの制約を設定します。
+     *
+     * @param string $param パラメーター名
+     * @param string $pattern 制約の正規表現
+     * @return $this
+     */
+    public function where(string $param, string $pattern): self {
+        $this->constraints[$param] = $pattern;
+        return $this;
+    }
+    /**
+     * バリデーションルールを設定します。
+     *
+     * @param array $rules バリデーションルール
+     * @return $this
+     */
+    public function validate(array $rules): self {
+        $this->validationRules = $rules;
+        return $this;
     }
 }

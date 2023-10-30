@@ -1,5 +1,6 @@
 <?php
 
+use Collection\Collection;
 use framework\Facades\Gate;
 use framework\Http\Request;
 use framework\Http\View;

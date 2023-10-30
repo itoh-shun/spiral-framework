@@ -1,6 +1,6 @@
 <?php
 
-use framework\SpiralConnecter\SpiralDB;
+use Collection\Collection;
 
 class Auth extends stdClass
 {

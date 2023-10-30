@@ -14,6 +14,9 @@ class CreateProjectDefaultFiles {
         $text = View::forge('spiral-framework/Command/Samples/makeAutoload',compact('projectName','dir'));
         file_put_contents("src/{$projectName}/makeAutoload.php", $text);
         
+        $text = View::forge('spiral-framework/Command/Samples/routes/batch',compact('projectName'));
+        file_put_contents("src/{$projectName}/routes/batch.php", $text);
+
         $text = View::forge('spiral-framework/Command/Samples/routes/web',compact('projectName'));
         file_put_contents("src/{$projectName}/routes/web.php", $text);
         
@@ -37,5 +40,8 @@ class CreateProjectDefaultFiles {
 
         $text = View::forge('spiral-framework/Command/Samples/resources/html/welcome.blade');
         file_put_contents("src/{$projectName}/resources/html/welcome.blade.php", $text);
+
+        $text = View::forge('spiral-framework/Command/Samples/resources/error.blade');
+        file_put_contents("src/{$projectName}/resources/error.blade.php", $text);
     }
 }

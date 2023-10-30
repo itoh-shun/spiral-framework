@@ -27,7 +27,7 @@ class Spiral{
                 return array_key_exists($key , $this->data);
             }
             function get($key){
-                return $this->data[$key];
+                return $this->data[$key] ?? '';
             }
             function incr($key,int $val = 1){
                 if(is_int($this->data[$key])){
