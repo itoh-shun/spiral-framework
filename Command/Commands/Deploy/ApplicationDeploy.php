@@ -221,20 +221,15 @@ class ApplicationDeploy extends Command
                 $this->rmdir_recursively(".tmp/$environment/src");
             }
         } else {
-            exec("cp -r spiral-framework/src/* .tmp/$environment");
+            if(!$skip){
+                exec("cp -r spiral-framework/src/* .tmp/$environment");
+            }
             exec("cp -r src/* .tmp/$environment");
         }
-<<<<<<< HEAD
-        if(!$skip){
-            exec("cp -r spiral-framework/src/* .tmp/$environment");
-        }
-
-=======
     }
     
     private function createZipArchive($environment)
     {
->>>>>>> a8db3a91cce758b025406f06b801d654254796dc
         $filelist = glob(".tmp/$environment/*");
         foreach ($filelist as $file) {
             if (file_exists("$file/makeAutoload.php")) {
