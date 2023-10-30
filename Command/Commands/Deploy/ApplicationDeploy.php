@@ -208,8 +208,9 @@ class ApplicationDeploy extends Command
         } else {
             exec("cp -r src/* .tmp/$environment");
         }
-        
-        exec("cp -r spiral-framework/src/* .tmp/$environment");
+        if(!$skip){
+            exec("cp -r spiral-framework/src/* .tmp/$environment");
+        }
 
         $filelist = glob(".tmp/$environment/*");
         foreach ($filelist as $file) {

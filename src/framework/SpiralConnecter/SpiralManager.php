@@ -615,7 +615,7 @@ class SpiralManager
         $this->connection->request($xSpiralApiHeader, $this->request);
     }
 
-    public function updateBulk($key, $update)
+    public function updateBulk($primaryKey, $update)
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject(
             'database',
@@ -633,7 +633,7 @@ class SpiralManager
         }
 
         $this->request->set('columns', $fields);
-        $this->request->set('key', $key);
+        $this->request->set('key', $primaryKey);
 
         $count = 0;
 
@@ -649,7 +649,7 @@ class SpiralManager
         return $count;
     }
 
-    public function upsertBulk($key, $upsert)
+    public function upsertBulk($primaryKey, $upsert)
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject(
             'database',
@@ -667,7 +667,7 @@ class SpiralManager
         }
 
         $this->request->set('columns', $fields);
-        $this->request->set('key', $key);
+        $this->request->set('key', $primaryKey);
 
         $count = 0;
 
