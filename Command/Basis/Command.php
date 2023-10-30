@@ -55,18 +55,18 @@ abstract class Command
         for ($i = 0; $i < count($commandArgv->options); $i++) {
             $arg = $commandArgv->options[$i];
 
-            foreach ($this->options as &$option) {
+            foreach ($this->options as $key => $option) {
                 if ($arg === '--' . $option['long'] || $arg === '-' . $option['short']) {
                     if ($option['hasValue']) {
                         if ($option['multipleValues']) {
                             while (isset($commandArgv->options[$i + 1]) && strpos($commandArgv->options[$i + 1], '-') !== 0) {
-                                $option['value'][] = $commandArgv->options[++$i];
+                                $this->options[$key]['value'][] = $commandArgv->options[++$i];
                             }
                         } else {
-                            $option['value'] = $commandArgv->options[++$i];
+                            $this->options[$key]['value'] = $commandArgv->options[++$i];
                         }
                     } else {
-                        $option['value'] = true; // 値を持たないオプションの場合、trueを設定
+                        $this->options[$key]['value'] = true; // 値を持たないオプションの場合、trueを設定
                     }
                     break;
                 }

@@ -19,6 +19,7 @@ class ApplicationDeploy extends Command
     public function __construct()
     {
         $this->curlClient = new CurlClient();
+        parent::__construct();
     }
     protected function defineOptions()
     {
