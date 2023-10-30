@@ -221,10 +221,11 @@ class ApplicationDeploy extends Command
                 $this->rmdir_recursively(".tmp/$environment/src");
             }
         } else {
-            if(!$skip){
-                exec("cp -r spiral-framework/src/* .tmp/$environment");
-            }
             exec("cp -r src/* .tmp/$environment");
+        }
+        
+        if(!$skip){
+            exec("cp -r spiral-framework/src/* .tmp/$environment");
         }
     }
     
