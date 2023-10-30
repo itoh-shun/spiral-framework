@@ -11,7 +11,7 @@ class RateLimiter
     {
         if (self::$redis === null) {
             self::$redis = new SpiralRedis();
-            self::$redis->setTimeout(60);
+            //self::$redis->setTimeout();
         }
     }
 

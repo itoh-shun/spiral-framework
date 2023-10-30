@@ -166,6 +166,9 @@ class ApplicationDeploy extends Command
                 file_put_contents("$file/makeAutoload.php", $text->render());
                 exec("cd $file && php makeAutoload.php && cd -");
             }
+            if (file_exists("$file/makeAutoloadCustom.php")) {
+                exec("cd $file && php makeAutoloadCustom.php && cd -");
+            }
         }
         
         $spiralFileList = glob("spiral-framework/src/*");
@@ -233,6 +236,9 @@ class ApplicationDeploy extends Command
         foreach ($filelist as $file) {
             if (file_exists("$file/makeAutoload.php")) {
                 unlink("$file/makeAutoload.php");
+            }
+            if (file_exists("$file/makeAutoloadCustom.php")) {
+                unlink("$file/makeAutoloadCustom.php");
             }
             if (file_exists("$file/.git")) {
                 $this->rmdir_recursively("$file/.git");

@@ -69,6 +69,9 @@ foreach ($files as $file) {
     if($file === \'./autoload_static.php\'){
         continue;
     }
+    if($file === \'./makeAutoloadCustom.php\'){
+        continue;
+    }
     $fileContent = file_get_contents($file);
     $fileContent = preg_replace(\'!/\*.*?\*/!s\', "", $fileContent); // マルチラインのコメントを削除
     $fileContent = preg_replace(\'!//.*?$!m\', "", $fileContent);    // シングルラインのコメントを削除
