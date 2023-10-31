@@ -50,7 +50,7 @@ class RateLimiter
         $total = 0;
         for ($i = 59; $i >= 0; $i--) {
             $key = time() - $i;
-            $total += self::$redis->get($key) ?: 0;
+            $total += (int)self::$redis->get($key) ?: 0;
         }
         return $total;
     }
