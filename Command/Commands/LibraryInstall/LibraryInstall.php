@@ -31,7 +31,7 @@ class LibraryInstall extends Command {
         
         // Check if the name option is set, otherwise ask for it
         $name = $this->getOptionValue('name');
-        if ($name && empty($list[$name])) {
+        if (empty($name) || empty($list[$name])) {
             $this->line("ライブラリが存在しません");
             $this->line('利用可能なライブラリ:');
 
