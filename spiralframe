@@ -9,7 +9,9 @@ use Command\Commands\DatabaseDelete;
 use Command\Commands\DatabaseSchemaCheck;
 use Command\Commands\Interactor\CreateProjectInteractor;
 use Command\Commands\Interactor\LibraryCreateInteractor;
+use Command\Commands\Interactor\LibraryInstallInteractor;
 use Command\Commands\LibraryCreate;
+use Command\Commands\LibraryInstall;
 use Command\Commands\LocalBuild;
 use PharIo\Manifest\Library;
 
@@ -22,6 +24,7 @@ $commander->add(new DatabaseSchemaCheck());
 $commander->add(new DatabaseDelete());
 $commander->add(new LocalBuild());
 $commander->add(new LibraryCreate(new LibraryCreateInteractor()));
+$commander->add(new LibraryInstall(new LibraryInstallInteractor()));
 
 $kernel = new Kernel($commander);
 $commandArgv = new CommandArgv($argv);

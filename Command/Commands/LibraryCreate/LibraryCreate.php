@@ -12,10 +12,10 @@ class LibraryCreate extends Command {
     public string $serialize = "library:create";
     private LibraryCreateInteractorInputPortInterface $inputPort;
     
-    public function __construct(LibraryCreateInteractorInputPortInterface $createProjectInteractor)
+    public function __construct(LibraryCreateInteractorInputPortInterface $libraryCreateInteractor)
     {
         parent::__construct();
-        $this->inputPort = $createProjectInteractor;
+        $this->inputPort = $libraryCreateInteractor;
     }
 
     protected function defineOptions()

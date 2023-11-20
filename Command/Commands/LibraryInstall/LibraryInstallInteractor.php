@@ -3,13 +3,13 @@
 namespace Command\Commands\Interactor;
 
 use Command\Basis\Core\View;
-use Command\Commands\UseCases\LibraryCreateDefaultFiles;
-use Command\Commands\UseCases\LibraryCreateDirectory;
+use Command\Commands\UseCases\LibraryInstallDefaultFiles;
+use Command\Commands\UseCases\LibraryInstallDirectory;
 use Exception;
 
-class LibraryCreateInteractor implements LibraryCreateInteractorInputPortInterface {
+class LibraryInstallInteractor implements LibraryInstallInteractorInputPortInterface {
 
-    public function execute(LibraryCreateInteractorInputData $inputdata)
+    public function execute(LibraryInstallInteractorInputData $inputdata)
     {
         if(!file_exists("src/Library")){
             mkdir("src/Library", 0755 , true);
@@ -29,6 +29,7 @@ class LibraryCreateInteractor implements LibraryCreateInteractorInputPortInterfa
         }
     }
     
+
     public function getMakeAutoloadFileContent() {
         return '
         <?php
@@ -195,7 +196,7 @@ class LibraryCreateInteractor implements LibraryCreateInteractorInputPortInterfa
 }
 
 
-class LibraryCreateInteractorInputData {
+class LibraryInstallInteractorInputData {
     public string $url = '';
     public string $name = '';
 
@@ -211,8 +212,7 @@ class LibraryCreateInteractorInputData {
     }
 }
 
-interface LibraryCreateInteractorInputPortInterface {
+interface LibraryInstallInteractorInputPortInterface {
 
-    public function execute(LibraryCreateInteractorInputData $inputdata);
+    public function execute(LibraryInstallInteractorInputData $inputdata);
 }
-
