@@ -28,6 +28,8 @@ class LibraryCreateInteractor implements LibraryCreateInteractorInputPortInterfa
             $text = $this->getMakeAutoloadFileContent();
             file_put_contents("src/Library/{$inputdata->name}/makeAutoload.php", $text);
         }
+        
+        exec("git submodule init && git submodule update");
     }
     
     public function getMakeAutoloadFileContent() {

@@ -22,6 +22,7 @@ class LibraryInstallInteractor implements LibraryInstallInteractorInputPortInter
         }
 
         exec("cd src/Library && git submodule add {$inputdata->url} && cd -");
+        exec("git submodule init && git submodule update");
     }
 }
 
