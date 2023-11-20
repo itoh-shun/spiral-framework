@@ -6,10 +6,14 @@ use Command\Basis\Command;
 use Command\Basis\Core\View;
 use Command\Basis\Request\CommandArgv;
 use Command\Basis\Request\CurlClient;
+use DirectoryIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class ApplicationDeploy extends Command
 {
     public string $serialize = 'app:deploy';
+    public string $currentPath = '';
 
     // Move hardcoded values to class constants
     const API_LOCATOR_URL = 'https://www.pi-pe.co.jp/api/locator';
@@ -20,6 +24,7 @@ class ApplicationDeploy extends Command
     {
         $this->curlClient = new CurlClient();
         parent::__construct();
+        $this->currentPath = getcwd();
     }
     protected function defineOptions()
     {
@@ -153,28 +158,44 @@ class ApplicationDeploy extends Command
         if (file_exists(".tmp/$environment.zip")) {
             exec("rm -rf .tmp/$environment.zip");
         }
+        exec('composer dump-autoload');
     }
     
     private function updateAutoload()
     {
-        exec('composer dump-autoload');
-        
-        $srcFileList = glob("src/*");
+        $srcFileList = glob("src/Library/*");
         foreach ($srcFileList as $file) {
+            if (file_exists("$file/makeAutoloadCustom.php")) {
+                
+                exec("cd $file && php makeAutoloadCustom.php {$this->currentPath} && cd -");
+            }
             if (file_exists("$file/makeAutoload.php")) {
                 $text = View::forge('spiral-framework/Command/Samples/makeAutoload');
                 file_put_contents("$file/makeAutoload.php", $text->render());
-                exec("cd $file && php makeAutoload.php && cd -");
+                
+                exec("cd $file && php makeAutoload.php {$this->currentPath} && cd -");
             }
+        }
+        
+        $srcFileList = glob("src/*");
+        foreach ($srcFileList as $file) {
             if (file_exists("$file/makeAutoloadCustom.php")) {
-                exec("cd $file && php makeAutoloadCustom.php && cd -");
+                
+                exec("cd $file && php makeAutoloadCustom.php {$this->currentPath} && cd -");
+            }
+            if (file_exists("$file/makeAutoload.php")) {
+                $text = View::forge('spiral-framework/Command/Samples/makeAutoload');
+                file_put_contents("$file/makeAutoload.php", $text->render());
+                
+                exec("cd $file && php makeAutoload.php {$this->currentPath} && cd -");
             }
         }
         
         $spiralFileList = glob("spiral-framework/src/*");
         foreach ($spiralFileList as $file) {
             if (file_exists("$file/makeAutoload.php")) {
-                exec("cd $file && php makeAutoload.php && cd -");
+                
+                exec("cd $file && php makeAutoload.php {$this->currentPath} && cd -");
             }
         }
     }
@@ -228,24 +249,35 @@ class ApplicationDeploy extends Command
             exec("cp -r spiral-framework/src/* .tmp/$environment");
             exec("cp -r src/* .tmp/$environment");
         }
+        $this->unlinkSymlinks('.tmp');
+        $this->removeDotStartingDirectories('.tmp');
     }
     
     private function createZipArchive($environment)
     {
-        $filelist = glob(".tmp/$environment/*");
-        foreach ($filelist as $file) {
-            if (file_exists("$file/makeAutoload.php")) {
-                unlink("$file/makeAutoload.php");
-            }
-            if (file_exists("$file/makeAutoloadCustom.php")) {
-                unlink("$file/makeAutoloadCustom.php");
-            }
-            if (file_exists("$file/.git")) {
-                $this->rmdir_recursively("$file/.git");
+        $this->processDirectory(".tmp/$environment");
+        exec("cd .tmp/$environment ; zip -r ../$environment.zip * ; cd -");
+    }
+    
+    private function processDirectory($dir)
+    {
+        $items = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::CHILD_FIRST);
+    
+        foreach ($items as $item) {
+            if ($item->isDir() && basename($item) == '.git') {
+                // .git ディレクトリを再帰的に削除
+                $this->rmdir_recursively($item->getPathname());
+            } elseif ($item->isFile()) {
+                // 特定のファイルを削除
+                if (pathinfo($item->getPathname(), PATHINFO_EXTENSION) !== 'php') {
+                    unlink($item->getPathname());
+                }
+                $filename = basename($item);
+                if (in_array($filename, ['make.php', 'makeAutoload.php', 'makeAutoloadCustom.php'])) {
+                    unlink($item->getPathname());
+                }
             }
         }
-    
-        exec("cd .tmp/$environment ; zip -r ../$environment.zip * ; cd -");
     }
 
     private function rmdir_recursively($dir)
@@ -274,4 +306,101 @@ class ApplicationDeploy extends Command
         closedir($dh);
         return rmdir($dir);
     }
+
+    private function removeDotStartingDirectories($dir)
+    {
+        $dh = opendir($dir);
+        if ($dh === false) {
+            return false;
+        }
+
+
+        while (($file = readdir($dh)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $path = rtrim($dir, '/') . '/' . $file;
+            if (is_dir($path)) {
+                // ディレクトリ名がドットで始まる場合に再帰的に処理
+                if (strpos($file, '.') === 0) {
+                    
+                    $this->removeDirectoryRecursively($path);
+                } else {
+                    // ドットで始まらないディレクトリの場合、そのディレクトリ内をさらに検索
+                    $this->removeDotStartingDirectories($path);
+                }
+            }
+        }
+        closedir($dh);
+    }
+
+    private function removeDirectoryRecursively($dir)
+    {
+        $dh = opendir($dir);
+        if ($dh === false) {
+            return false;
+        }
+
+        while (($file = readdir($dh)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $path = rtrim($dir, '/') . '/' . $file;
+            if (is_dir($path)) {
+                $this->removeDirectoryRecursively($path);
+            } else {
+                unlink($path);
+            }
+        }
+        closedir($dh);
+
+        return rmdir($dir);
+    }
+
+    private function unlinkSymlinks($dir) {
+        // ディレクトリが存在しないか確認
+        if (!file_exists($dir)) {
+            return;
+        }
+    
+        // ディレクトリ内のアイテムを取得
+        $items = new DirectoryIterator($dir);
+        foreach ($items as $item) {
+            // 現在のアイテムがディレクトリかどうか確認
+            if ($item->isLink()) {
+                $realPath = realpath($item->getPathname());
+                // シンボリックリンクなら削除
+                unlink($item->getPathname());
+                if (is_dir($realPath)) {
+                    // 実体がディレクトリの場合、ディレクトリをコピー
+                    $this->recurse_copy($realPath, $item->getPathname());
+                } else {
+                    // 実体がファイルの場合、ファイルをコピー
+                    copy($realPath, $item->getPathname());
+                }
+            } else if ($item->isDir() && !$item->isDot()) {
+                // ディレクトリなら再帰的に処理
+                $this->unlinkSymlinks($item->getPathname());
+            }
+        }
+    }
+
+    
+    private function recurse_copy($src, $dst) {
+        $dir = opendir($src);
+        mkdir($dst);
+        while (($file = readdir($dir)) !== false) {
+            if (($file != '.') && ($file != '..')) {
+                if (is_dir($src . '/' . $file)) {
+                    $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                } else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
+    }
+
 }

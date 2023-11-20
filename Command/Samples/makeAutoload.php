@@ -34,13 +34,13 @@ function extractClassesFromStatement($pattern, $fileContent) {
 }
 
 
-$classToFileMap = require_once \'../../vendor/composer/autoload_classmap.php\';
+$classToFileMap = require_once $argv[1].\'/vendor/composer/autoload_classmap.php\';
 $classToFileMap = array_filter($classToFileMap, function ($path) {
     return strpos($path, getcwd()) !== false;
 });
 $classToFileMapFiles = array_values($classToFileMap);
 
-$directory = new RecursiveDirectoryIterator(\'./\');
+$directory = new RecursiveDirectoryIterator(\'./\', RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
 $iterator = new RecursiveIteratorIterator($directory);
 $regex = new RegexIterator($iterator, \'/^.+\.php$/i\', RecursiveRegexIterator::GET_MATCH);
 
@@ -57,6 +57,9 @@ usort($files, function ($a, $b) {
 $dependencies = [];
 
 foreach ($files as $file) {
+    if (strpos($file, \'./.\') === 0) {
+        continue;
+    }
     if (strpos($file, \'./resources\') === 0) {
         continue;
     }
@@ -137,7 +140,9 @@ foreach (array_keys($dependencies) as $file) {
 
 $newDependencies = [];
 foreach ($dependencies as $relativeFile  => $classes) {
-    $file = realpath($relativeFile);
+    $file = ltrim($relativeFile, \'./\');
+    $file = __DIR__ . \'/\' . $file; // __DIR__ は現在のスクリプトのディレクトリ
+    $file = str_replace(\'//\', \'/\', $file); // 重複するスラッシュを排除
     //$class = array_search($file, $classToFileMap);
     //if ($class !== false) {
     $newDependencies[$file] = [];

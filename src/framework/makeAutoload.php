@@ -31,7 +31,7 @@ function extractClassesFromStatement($pattern, $fileContent) {
 }
 
 
-$classToFileMap = require_once '../../../vendor/composer/autoload_classmap.php';
+$classToFileMap = require_once $argv[1].'/vendor/composer/autoload_classmap.php';
 $classToFileMap = array_filter($classToFileMap, function ($path) {
     return strpos($path, getcwd()) !== false;
 });
