@@ -158,7 +158,13 @@ $baseDir = getcwd();
 $currentDirName = basename(getcwd());  // 現在のディレクトリ名を取得
 $autoloadFileContent = "<?php \r\n";
 foreach(array_reverse(topological_sort($newDependencies)) as $file) {
-    $relativePath = $currentDirName . \'/\' . str_replace($baseDir, \'\', $file);  // ディレクトリ名を付与
+    $libraryPathStartPos = strpos($baseDir, "Library");
+    if ($libraryPathStartPos !== false) {
+        $libraryRelativePath = substr($baseDir, $libraryPathStartPos);
+    } else {
+        $libraryRelativePath = $currentDirName;
+    }
+    $relativePath = $libraryRelativePath . \'/\' . str_replace($baseDir, \'\', $file);  // ディレクトリ名を付与
     $relativePath = str_replace(\'//\', \'/\', $relativePath);
     $autoloadFileContent .= "require_once \'{$relativePath}\';\r\n";
 }
