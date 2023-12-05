@@ -27,7 +27,8 @@ class SpiralConnecter implements SpiralConnecterInterface
 
     public function request(
         XSpiralApiHeaderObject $header,
-        HttpRequestParameter $httpRequestParameter
+        HttpRequestParameter $httpRequestParameter,
+        array $files = []
     ) {
         if(class_exists('SpiralApiRequest')) {
             $request = new \SpiralApiRequest();

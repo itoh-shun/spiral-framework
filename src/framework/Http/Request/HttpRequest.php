@@ -29,24 +29,69 @@ class HttpRequest
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->httpHeader);
         $response = curl_exec($curl);
         curl_close($curl);
         return json_decode($response);
     }
 
-    public function post(HttpRequestParameter $param)
+    public function post(HttpRequestParameter $param, $files = [])
     {
+        if(!empty($files) || count($files) > 0){
+            return $this->multiPartPost($param, $files);
+        }
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $this->url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $param->toJson());
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->httpHeader);
         $response = curl_exec($curl);
         curl_close($curl);
+        return json_decode($response);
+    }
+
+    public function multiPartPost(HttpRequestParameter $param, $files = [])
+    {
+        $boundary = '----' . md5(time());
+        $delimiter = "--" . $boundary . "\r\n";
+        $data = '';
+
+        // パラメータの追加
+        $data .= $delimiter;
+        $data .= "Content-Type: application/json; charset='UTF-8';\r\n";
+        $data .= 'Content-Disposition: form-data; name="json'."\"\r\n\r\n" . $param->toJson();
+        $data .= "\r\n\r\n";
+        // ファイルの追加
+        foreach ($files as $file) {
+            $data .= $delimiter;
+            $data .= "Content-Type: application/octet-stream;\r\n";
+            $data .= 'Content-Disposition: form-data; name="' . $file['field'] . '"; filename="' . $file['name'] . "\"\r\n\r\n";
+            $data .= $file['binary'];
+            $data .= "\r\n\r\n";
+        }
+
+        // 最後のデリミタを追加
+        $data .= "--" . $boundary . "--\r\n";
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            $this->httpHeader[0],
+            'Content-Type: multipart/form-data; boundary=' . $boundary
+        ]);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        $response = curl_exec($curl);
+        curl_close($curl);
+
         return json_decode($response);
     }
 

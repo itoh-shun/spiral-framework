@@ -100,6 +100,13 @@ namespace framework\SpiralConnecter {
             }
             return $this->manager;
         }
+
+        public static function instance(){
+            /** @phpstan-ignore-next-line */
+            $instance = new static();
+            return $instance->getManager();
+        }
+
         // 主キーによるレコードの取得
         public static function find($value)
         {
@@ -159,9 +166,16 @@ namespace framework\SpiralConnecter {
                 return in_array($key, $this->fields);
             }, ARRAY_FILTER_USE_KEY);
 
+            foreach ($data as $key => $value) {
+                if ($value === null) {
+                    // nullの場合、空文字列で上書き
+                    $data[$key] = '';
+                }
+            }
+            
             // 主キーの値を取得
             $primaryKeyValue = $data[$this->primaryKey] ?? null;
-
+            
             if ($primaryKeyValue) {
                 // 主キーの値が存在する場合、更新または挿入を行う
                 $this->getManager()->upsert($this->primaryKey, $data);

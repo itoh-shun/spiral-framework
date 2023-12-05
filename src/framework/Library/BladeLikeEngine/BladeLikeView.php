@@ -23,10 +23,12 @@ class BladeLikeView extends View
     public static function parser()
     {
         $path = ( VIEW_FILE_ROOT == '' ) ? 'framework/resources' : VIEW_FILE_ROOT ;
-        return new BladeOneCustom(
+        $blade = new BladeOneCustom(
             $path,
             null,
             BladeOneCustom::MODE_DEBUG
         );
+        $blade->getCsrfToken();
+        return $blade;
     }
 }

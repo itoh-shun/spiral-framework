@@ -47,7 +47,6 @@ class Router
         string $pass,
         $handler
     ): Route {
-
         if(!empty(self::$prefix)) {
             $pass = (ltrim($pass, '/') === '') ? self::$prefix : self::$prefix.'/'.ltrim($pass, '/');
         }
@@ -154,12 +153,18 @@ class Router
     }
 
     public static function resource(string $resource, string $controller): void {
-        self::map('GET', "/{$resource}", [$controller , 'index']);
-        self::map('GET', "/{$resource}/create", [$controller , 'create']);
-        self::map('POST', "/{$resource}", [$controller , 'store']);
-        self::map('GET', "/{$resource}/:id", [$controller , 'show']);
-        self::map('GET', "/{$resource}/:id/edit", [$controller , 'edit']);
-        self::map('PUT', "/{$resource}/:id", [$controller , 'update']);
-        self::map('DELETE', "/{$resource}/:id", [$controller , 'destroy']);
+        self::map('GET', "/{$resource}", [$controller , 'index'])->name("{$resource}.index");
+        self::map('GET', "/{$resource}/create", [$controller , 'create'])->name("{$resource}.create");
+        self::map('POST', "/{$resource}", [$controller , 'store'])->name("{$resource}.store");
+        self::map('GET', "/{$resource}/:id", [$controller , 'show'])->name("{$resource}.show");
+        self::map('GET', "/{$resource}/:id/edit", [$controller , 'edit'])->name("{$resource}.edit");
+        self::map('PUT', "/{$resource}/:id", [$controller , 'update'])->name("{$resource}.update");
+        self::map('DELETE', "/{$resource}/:id", [$controller , 'destroy'])->name("{$resource}.destroy");
+    }
+
+    public static function help(){
+        foreach(self::$routes as $route){
+            echo $route->help() . PHP_EOL;
+        }
     }
 }

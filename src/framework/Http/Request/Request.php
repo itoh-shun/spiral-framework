@@ -5,6 +5,7 @@ namespace framework\Http;
 use Auth;
 use framework\Http\Session\RequestSession;
 use framework\Library\SiValidator;
+use SiValidator2\SiValidator2;
 
 /**
  * Class Request
@@ -181,7 +182,7 @@ class Request
             $values[$key] = $this->get($key, $this->session()->get($key, ''));
         }
 
-        return SiValidator::make($values, $rules, $labels);
+        return SiValidator2::make($values, $rules, $labels);
     }
 
     public function session()
@@ -217,5 +218,29 @@ class Request
         $newUrl = $parsedUrl['path'] . '?' . $newQueryStr;
     
         return $newUrl;
+    }
+    public function generateUrl($paramsToKeep, $addParams = []){
+
+        $baseUrl = strtok($_SERVER['REQUEST_URI'], '?');
+        // 現在のURLからクエリパラメータを取得
+        $currentParams = $this->all();
+
+        // 引き継ぐべきパラメータを保持するための配列
+        $paramsToInclude = [];
+
+        // 特定のパラメータのみを新しいURLに含める
+        foreach ($paramsToKeep as $param) {
+            if (isset($currentParams[$param])) {
+                $paramsToInclude[$param] = $currentParams[$param];
+            }
+        }
+
+        $paramsToInclude = array_merge($paramsToInclude,$addParams);
+
+        // クエリ文字列を生成
+        $queryString = http_build_query($paramsToInclude);
+
+        // 新しいURLを生成
+        return $baseUrl . '?' . $queryString;
     }
 }

@@ -28,6 +28,11 @@ class UniqueRule implements RuleInterface
         return true;
     }
 
+    public function where(callable $callback):self{
+        $this->model = $callback($this->model);
+        return $this;
+    }
+
     public function validate($value, array $allValues = []): bool
     {
         $query = $this->model->where($this->column, $value);

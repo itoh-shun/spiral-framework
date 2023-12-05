@@ -601,6 +601,13 @@ class SpiralManager
         return (int) $res['status'];
     }
 
+    public function setFile($field , $name , $binary){
+        $files = $this->request->get('files') ?? [];
+        $files[] = [ 'field' => $field, 'name' => $name, 'binary' => $binary];
+        $this->request->set('files', $files);
+        return $this;
+    }
+
     public function delete(): int
     {
         $xSpiralApiHeader = new XSpiralApiHeaderObject('database', 'delete');

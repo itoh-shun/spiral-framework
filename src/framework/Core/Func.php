@@ -5,6 +5,7 @@ use framework\Facades\Gate;
 use framework\Http\Request;
 use framework\Http\View;
 use framework\Library\BladeLikeEngine\BladeLikeView;
+use framework\Library\BladeLikeEngine\BladeOneCustom;
 use framework\Routing\Router;
 
 function view(string $template, array $param = [], bool $filter = false): View
@@ -110,4 +111,17 @@ function isFile($fullFileName)
         @require $fullFileName . '.blade.php';
     }
     return !empty(ob_get_clean()); //バッファ制御終了＆変数を取得
+}
+
+function url($path , $vars = []){
+    $request = new Request();
+    $pathKey = $request::getPathKey();
+    $path = Router::fetchAlias($path , $vars);
+    return $request->generateUrl(['SMPFORM','MyPageID'],[$pathKey => $path]);
+}
+
+function redirect($path , $vars = [] , $keep = []){
+    $path = Router::fetchAlias($path , $vars);
+    router::metaRedirect($path, new Request() , ['SMPFORM','MyPageID', ...$keep]);
+    exit;
 }

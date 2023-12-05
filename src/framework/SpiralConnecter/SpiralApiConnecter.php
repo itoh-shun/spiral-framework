@@ -60,8 +60,11 @@ class SpiralApiConnecter implements SpiralConnecterInterface
         );
 
         $request->setUrl($this->location);
-        $response = $request->post($httpRequestParameter);
 
+        $files = $httpRequestParameter->get('files') ?? [];
+        $httpRequestParameter->delete('files');
+
+        $response = $request->post($httpRequestParameter, $files);
 
         if ($response->code != 0) {
             throw new Exception($response->message, $response->code);

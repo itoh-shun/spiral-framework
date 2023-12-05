@@ -46,7 +46,7 @@ use SiValidator2\Rules\UniqueRule;
 class SiValidator2
 {
     private $results = [];
-    private static $currentLang = 'en';  // default language
+    private static $currentLang = 'ja';  // default language
     private static $ruleMappings = [
         'required' => [RequiredRule::class, []],
         'accepted' => [AcceptedRule::class, []],
@@ -62,8 +62,8 @@ class SiValidator2
         'date_equals' => [DateEqualsRule::class, ['date']],
         'date_format' => [DateFormatRule::class, ['format']],
         'date' => [DateRule::class, []],
-        'between' => [BetweenRule::class, []],
-        'boolean' => [BooleanRule::class, ['min','max']],
+        'between' => [BetweenRule::class, ['min','max']],
+        'boolean' => [BooleanRule::class, []],
         'confirmed' => [ConfirmedRule::class, ['field']],
         'declined' => [DeclinedRule::class, []],
         'declined_if' => [DeclinedIfRule::class, ['other','value']],

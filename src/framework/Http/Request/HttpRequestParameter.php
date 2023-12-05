@@ -9,6 +9,10 @@ class HttpRequestParameter extends stdClass
         }
     }
 
+    public function delete($key){
+        unset($this->{$key});
+    }
+
     public function set($key, $value)
     {
         $this->{$key} = $value;

@@ -53,6 +53,10 @@ class Route
         }
     }
 
+    public function help(){
+        return "$this->method | $this->pass";
+    }
+
     final public function processable(
         Request $request,
         $isMethodCheck = true
@@ -72,7 +76,6 @@ class Route
             if ($this->startsWith($exploded_uri_pattern, ':')) {
                 continue;
             }
-
             if ($exploded_uri_pattern !== $exploded_uri) {
                 return false;
             }
