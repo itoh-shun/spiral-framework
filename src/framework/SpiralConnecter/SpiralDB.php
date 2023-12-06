@@ -173,6 +173,10 @@ namespace framework\SpiralConnecter {
                 }
             }
             
+            if($this->primaryKey !== 'id'){
+                unset($data['id']);
+            }
+
             // 主キーの値を取得
             $primaryKeyValue = $data[$this->primaryKey] ?? null;
             
